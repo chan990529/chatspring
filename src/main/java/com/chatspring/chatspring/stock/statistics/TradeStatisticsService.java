@@ -26,6 +26,24 @@ public class TradeStatisticsService {
         tradeStatisticsRepository.save(tradeStatistics);
     }
 
+
+    public Map<String, Object> getStatisticsForDate(LocalDate date) {
+        // 특정 날짜의 통계를 조회하는 로직 구현
+        TradeStatistics stats = tradeStatisticsRepository.findByDate(date);
+
+        if (stats != null) {
+            Map<String, Object> statistics = new HashMap<>();
+            statistics.put("date", stats.getDate());
+            statistics.put("total_trades", stats.getTotalTrades());
+            statistics.put("count_sell_price_1", stats.getCountSellPrice1());
+            statistics.put("count_sell_price_2", stats.getCountSellPrice2());
+            statistics.put("count_sell_price_3", stats.getCountSellPrice3());
+            return statistics;
+        } else {
+            throw new RuntimeException("No statistics available for this day.");
+        }
+    }
+
     public Map<String, Object> getStatisticsForToday() {
         LocalDate today = LocalDate.now();
         TradeStatistics stats = tradeStatisticsRepository.findByDate(today);
