@@ -1,130 +1,102 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Card, CardContent, Typography, Grid, TextField, useMediaQuery } from '@mui/material';
+import { Card } from '@/components/ui/card';
 
-const ScriptStatus = () => {
-  const [status, setStatus] = useState({
-    status: 'Loading...',
-    lastUpdateTime: 'N/A',
-    details: 'N/A',
-    error: null
+const TradeStatistics = () => {
+  const [statistics, setStatistics] = useState({
+    date: 'N/A',
+    total_trades: 0,
+    count_sell_price_1: 0,
+    count_sell_price_2: 0,
+    count_sell_price_3: 0
   });
+  const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchStatistics = async (date) => {
+    setIsLoading(true);
+    try {
+      const url = date ? `/api/trades/statistics?date=${date}` : '/api/trades/statistics';
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch statistics');
+      }
+      const data = await response.json();
+      setStatistics(data);
+      setError(null);
+    } catch (error) {
+      console.error('Failed to fetch trade statistics:', error);
+      setError('통계 데이터를 가져오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStatus = () => {
-      axios.get('/api/monitoring/status')
-        .then((response) => {
-          setStatus(response.data);
-        })
-        .catch((error) => {
-          console.error('Failed to fetch script status:', error);
-          setStatus((prevStatus) => ({
-            ...prevStatus,
-            error: 'Failed to fetch status'
-          }));
-        });
-    };
-
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 10000);
-
-    return () => clearInterval(interval);
+    fetchStatistics();
   }, []);
 
+  const handleDateChange = (e) => {
+    setSelectedDate(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (selectedDate) {
+      fetchStatistics(selectedDate);
+    }
+  };
+
+  const calculatePercentage = (count) => {
+    return statistics.total_trades > 0 ? ((count / statistics.total_trades) * 100).toFixed(2) + '%' : '0%';
+  };
+
   return (
-    <Card sx={{ marginBottom: 2 }}>
-      <CardContent>
-        <Typography variant="h5">연구소 통신상태</Typography>
-        <Typography><strong>상태:</strong> {status.status}</Typography>
-        <Typography><strong>최종 업데이트:</strong> {status.lastUpdateTime}</Typography>
-        <Typography><strong>내용:</strong> {status.details}</Typography>
-        {status.error && (
-          <Typography color="error"><strong>Error:</strong> {status.error}</Typography>
-        )}
-      </CardContent>
-    </Card>
+      <Card className="p-4">
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold">거래 통계 검색</h2>
+
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+                type="date"
+                value={selectedDate}
+                onChange={handleDateChange}
+                className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+                onClick={handleSearch}
+                disabled={!selectedDate || isLoading}
+                className={`px-4 py-2 rounded-lg text-white
+              ${!selectedDate || isLoading
+                    ? 'bg-gray-400'
+                    : 'bg-blue-500 hover:bg-blue-600'}`}
+            >
+              {isLoading ? '검색 중...' : '검색'}
+            </button>
+          </div>
+
+          {error ? (
+              <div className="text-red-500 font-bold">{error}</div>
+          ) : (
+              <div className="space-y-2">
+                <p><span className="font-bold">날짜:</span> {statistics.date}</p>
+                <p><span className="font-bold">총 거래 수:</span> {statistics.total_trades}</p>
+                <p>
+                  <span className="font-bold">1% 수익 달성 거래 수:</span> {statistics.count_sell_price_1}
+                  ({calculatePercentage(statistics.count_sell_price_1)})
+                </p>
+                <p>
+                  <span className="font-bold">2% 수익 달성 거래 수:</span> {statistics.count_sell_price_2}
+                  ({calculatePercentage(statistics.count_sell_price_2)})
+                </p>
+                <p>
+                  <span className="font-bold">3% 수익 달성 거래 수:</span> {statistics.count_sell_price_3}
+                  ({calculatePercentage(statistics.count_sell_price_3)})
+                </p>
+              </div>
+          )}
+        </div>
+      </Card>
   );
 };
 
-const VirtualTradeCard = ({ trade }) => (
-  <Card
-    sx={{
-      marginBottom: 2,
-      backgroundColor: trade.sellPrice1 ? 'lime' : '#add8e6', // 조건에 따라 카드 전체 배경색 설정
-    }}
-  >
-    <CardContent>
-      <Typography variant="h6"><strong>종목명:</strong> {trade.stockName}</Typography>
-      {/* <Typography><strong>종목코드:</strong> {trade.stockCode}</Typography> */}
-      <Typography><strong>평단가:</strong> {trade.buyPrice}</Typography>
-      <Typography><strong>매수일:</strong> {new Date(trade.buyTime).toLocaleDateString('en-US', { dateStyle: 'short' })}</Typography>
-      <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
-      <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
-      <Typography><strong>손절가:</strong> {trade.stopLossPrice}</Typography>
-      <Typography><strong>조건식:</strong> {trade.conditionType}</Typography>
-      <Typography><strong>1% 매도가:</strong> {trade.sellPrice1 ? trade.sellPrice1 : 'N/A'}</Typography>
-      <Typography><strong>1% 경과시간:</strong> {trade.reachTime1}</Typography>
-      <Typography><strong>2% 매도가:</strong> {trade.sellPrice2 ? trade.sellPrice2 : 'N/A'}</Typography>
-      <Typography><strong>2% 경과시간:</strong> {trade.reachTime2}</Typography>
-      <Typography><strong>3% 매도가:</strong> {trade.sellPrice3 ? trade.sellPrice3 : 'N/A'}</Typography>
-      <Typography><strong>3% 경과시간:</strong> {trade.reachTime3}</Typography>
-      {/* <Typography><strong>수익률:</strong> {trade.profitReason ? trade.profitReason : 'N/A'}</Typography> */}
-    </CardContent>
-  </Card>
-);
-
-const VirtualTradeTable = () => {
-  const [virtualTrades, setVirtualTrades] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    axios.get('/api/trades')
-      .then(response => {
-        setVirtualTrades(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the virtual trades!', error);
-      });
-  }, []);
-
-  const filteredTrades = virtualTrades.filter(trade =>
-    trade.stockName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  return (
-    <div>
-      <TextField
-        label="종목명 검색"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      {filteredTrades.length > 0 ? (
-        filteredTrades.map((trade) => (
-          <VirtualTradeCard key={trade.tradeId} trade={trade} />
-        ))
-      ) : (
-        <Typography>해당 종목이 없습니다.</Typography>
-      )}
-    </div>
-  );
-};
-
-const MonitoringAndTrades = () => {
-  const isMobile = useMediaQuery('(max-width:600px)');
-
-  return (
-    <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
-      <Grid item xs={12} md={6}>
-        <ScriptStatus />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <VirtualTradeTable />
-      </Grid>
-    </Grid>
-  );
-};
-
-export default MonitoringAndTrades;
+export default TradeStatistics;
