@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, TextField, useMediaQuery } from '@mui/material';
+axios.defaults.baseURL = 'https://scalping.app';
 
 const ScriptStatus = () => {
   const [status, setStatus] = useState({

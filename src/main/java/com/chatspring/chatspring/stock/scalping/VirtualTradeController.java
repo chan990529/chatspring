@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/trades")
-@CrossOrigin(origins = "http://13.209.60.49:3000") // React 앱의 포트를 지정
+//@CrossOrigin(origins = "http://13.209.60.49:3000") // React 앱의 포트를 지정
 public class VirtualTradeController {
 
     @Autowired
