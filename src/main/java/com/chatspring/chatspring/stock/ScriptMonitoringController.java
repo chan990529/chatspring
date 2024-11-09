@@ -18,7 +18,7 @@ public class ScriptMonitoringController {
 
     private final Map<String, Object> scriptStatus = new HashMap<>();
 
-    @Autowired
+
     public ScriptMonitoringController() {
         // 초기 상태 설정
         scriptStatus.put("status", "Not Running");
