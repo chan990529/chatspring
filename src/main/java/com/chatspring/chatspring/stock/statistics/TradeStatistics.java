@@ -20,6 +20,9 @@ public class TradeStatistics {
     @Column(name = "total_trades", nullable = false)
     private Integer totalTrades;
 
+    @Column(name = "total_wins", nullable = false)
+    private Integer totalWins;
+
     @Column(name = "count_sell_price_1")
     private Integer countSellPrice1;
 
@@ -52,6 +55,14 @@ public class TradeStatistics {
 
     public void setTotalTrades(Integer totalTrades) {
         this.totalTrades = totalTrades;
+    }
+
+    public Integer getTotalWins() {
+        return totalWins;
+    }
+
+    public void setTotalWins(Integer totalWins) {
+        this.totalWins = totalWins;
     }
 
     public Integer getCountSellPrice1() {

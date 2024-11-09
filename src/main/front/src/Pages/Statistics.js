@@ -140,18 +140,13 @@ const TradeStatistics = () => {
           ) : (
               <div className="space-y-2 mt-4">
                 <p><span className="font-bold">날짜:</span> {statistics.date}</p>
-                <p><span className="font-bold">총 거래 수:</span> {statistics.total_trades}</p>
+                <p><span className="font-bold">포착종목수:</span> {statistics.total_trades}</p>
                 <p>
-                  <span className="font-bold">1% 수익 달성 거래 수:</span> {statistics.count_sell_price_1}
-                  ({calculatePercentage(statistics.count_sell_price_1)})
+                  <span className="font-bold">승리 :</span> {statistics.total_wins}
+                  <span className="font-bold">패배 :</span> {statistics.total_trades- statistics.total_wins}
                 </p>
                 <p>
-                  <span className="font-bold">2% 수익 달성 거래 수:</span> {statistics.count_sell_price_2}
-                  ({calculatePercentage(statistics.count_sell_price_2)})
-                </p>
-                <p>
-                  <span className="font-bold">3% 수익 달성 거래 수:</span> {statistics.count_sell_price_3}
-                  ({calculatePercentage(statistics.count_sell_price_3)})
+                  <span className="font-bold">승률 :</span> {calculatePercentage(statistics.total_wins)}
                 </p>
               </div>
           )}

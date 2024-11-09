@@ -1,6 +1,7 @@
 {
   "name": "chatspring_frontend",
   "version": "0.1.0",
+  "homepage": "https://scalping.app",
   "private": true,
   "dependencies": {
     "@babel/polyfill": "^7.12.1",

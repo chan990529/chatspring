@@ -51,7 +51,7 @@ const VirtualTradeCard = ({ trade }) => {
     <Card
       sx={{
         marginBottom: 2,
-        backgroundColor: trade.sellPrice1 ? 'lime' : '#add8e6',
+        backgroundColor: trade.sellPrice1 ? '#54ED7F' : '#DB4455',
       }}
     >
       <CardContent>
