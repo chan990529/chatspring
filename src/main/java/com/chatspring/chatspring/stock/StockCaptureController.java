@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/stocks")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://13.209.60.49:3000")
 public class StockCaptureController {
 
     @Autowired
