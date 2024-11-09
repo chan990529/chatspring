@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card } from '@/components/ui/card';
+// import { Card } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
+import { Card} from '@mui/material';
 
 const TradeStatistics = () => {
   const [statistics, setStatistics] = useState({

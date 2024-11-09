@@ -3,6 +3,7 @@ package com.chatspring.chatspring.stock.scalping;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "virtual_trades")
@@ -24,7 +25,7 @@ public class VirtualTrade {
     private Integer buyPrice;
 
     @Column(name = "buy_time", nullable = false)
-    private LocalDate buyTime;
+    private LocalDateTime buyTime;
 
     @Column(name = "num_buys", nullable = false)
     private Integer numBuys;
@@ -104,11 +105,11 @@ public class VirtualTrade {
         this.buyPrice = buyPrice;
     }
 
-    public LocalDate getBuyTime() {
+    public LocalDateTime getBuyTime() {
         return buyTime;
     }
 
-    public void setBuyTime(LocalDate buyTime) {
+    public void setBuyTime(LocalDateTime buyTime) {
         this.buyTime = buyTime;
     }
 

@@ -57,7 +57,7 @@ const VirtualTradeCard = ({ trade }) => {
       <CardContent>
         <Typography variant="h6"><strong>종목명:</strong> {trade.stockName}</Typography>
         <Typography><strong>평단가:</strong> {trade.buyPrice}</Typography>
-        <Typography><strong>매수일:</strong> {new Date(trade.buyTime).toLocaleDateString('en-US', { dateStyle: 'short' })}</Typography>
+        <Typography><strong>매수일:</strong> {new Date(trade.buyTime).toLocaleString('ko-KR')}</Typography>
         <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
         <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
         <Typography><strong>손절가:</strong> {trade.stopLossPrice}</Typography>
