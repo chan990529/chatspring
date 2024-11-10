@@ -38,6 +38,7 @@ public class TradeStatisticsService {
             statistics.put("count_sell_price_1", stats.getCountSellPrice1());
             statistics.put("count_sell_price_2", stats.getCountSellPrice2());
             statistics.put("count_sell_price_3", stats.getCountSellPrice3());
+            statistics.put("total_wins", stats.getTotalWins());
             return statistics;
         } else {
             throw new RuntimeException("No statistics available for this day.");
@@ -55,6 +56,7 @@ public class TradeStatisticsService {
             statistics.put("count_sell_price_1", stats.getCountSellPrice1());
             statistics.put("count_sell_price_2", stats.getCountSellPrice2());
             statistics.put("count_sell_price_3", stats.getCountSellPrice3());
+            statistics.put("total_wins", stats.getTotalWins());
             return statistics;
         } else {
             throw new RuntimeException("No statistics available for today.");

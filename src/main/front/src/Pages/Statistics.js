@@ -6,10 +6,11 @@ import { Card} from '@mui/material';
 const TradeStatistics = () => {
   const [statistics, setStatistics] = useState({
     date: 'N/A',
-    total_trades: 0,
     count_sell_price_1: 0,
     count_sell_price_2: 0,
-    count_sell_price_3: 0
+    count_sell_price_3: 0,
+    total_trades: 0,
+    total_wins : 0
   });
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -143,7 +144,7 @@ const TradeStatistics = () => {
                 <p><span className="font-bold">포착종목수:</span> {statistics.total_trades}</p>
                 <p>
                   <span className="font-bold">승리 :</span> {statistics.total_wins}
-                  <span className="font-bold">패배 :</span> {statistics.total_trades- statistics.total_wins}
+                  <span className="font-bold"> 패배 :</span> {statistics.total_trades- statistics.total_wins}
                 </p>
                 <p>
                   <span className="font-bold">승률 :</span> {calculatePercentage(statistics.total_wins)}

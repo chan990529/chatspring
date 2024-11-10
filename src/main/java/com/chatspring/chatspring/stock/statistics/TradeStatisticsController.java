@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/trades/statistics")
-@CrossOrigin(origins = "http://13.209.60.49:3000") // React 앱의 포트를 지정
 public class TradeStatisticsController {
 
     private final TradeStatisticsService tradeStatisticsService;
