@@ -59,7 +59,7 @@ const TradeStatistics = () => {
 
   useEffect(() => {
     handleManualDateInput();
-  }, [year, month, day]);
+  }, [year, month, day, handleManualDateInput]);
 
   const handleSearch = () => {
     if (selectedDate) {
