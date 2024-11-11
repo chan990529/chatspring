@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, TextField, useMediaQuery } from '@mui/material';
-axios.defaults.baseURL = 'https://scalping.app/api';
+axios.defaults.baseURL = 'http://13.209.60.49/api';
 // axios.defaults.baseURL = 'http://localhost:8080';
 
 const ScriptStatus = () => {
