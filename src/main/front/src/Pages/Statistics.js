@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { Card } from '@mui/material';
 import axios from "axios";
-
-axios.defaults.baseURL = 'https://13.209.60.49:8443';
+axios.defaults.baseURL = 'https://scalping.app/api';
 
 const TradeStatistics = () => {
   const [statistics, setStatistics] = useState({
