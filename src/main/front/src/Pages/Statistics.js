@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Calendar } from 'lucide-react';
 import { Card } from '@mui/material';
 import axios from "axios";
-axios.defaults.baseURL = 'https://13.209.60.49/api';
+axios.defaults.baseURL = 'https://13.209.60.49:8080';
 
 const TradeStatistics = () => {
   const [statistics, setStatistics] = useState({
