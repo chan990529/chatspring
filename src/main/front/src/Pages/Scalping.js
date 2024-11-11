@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, TextField, useMediaQuery } from '@mui/material';
-axios.defaults.baseURL = 'http://13.209.60.49:8080';
+axios.defaults.baseURL = 'https://13.209.60.49:8080';
+// axios.defaults.baseURL = 'http://localhost:8080';
 
 const ScriptStatus = () => {
   const [status, setStatus] = useState({

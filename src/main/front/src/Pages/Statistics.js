@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-// import { Card } from '@/components/ui/card';
 import { Calendar } from 'lucide-react';
-import { Card} from '@mui/material';
+import { Card } from '@mui/material';
+import axios from "axios";
+
+axios.defaults.baseURL = 'https://13.209.60.49:8080';
 
 const TradeStatistics = () => {
   const [statistics, setStatistics] = useState({
@@ -10,7 +12,8 @@ const TradeStatistics = () => {
     count_sell_price_2: 0,
     count_sell_price_3: 0,
     total_trades: 0,
-    total_wins : 0
+    total_wins: 0,
+    avg_reach_time: 'N/A'
   });
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -24,12 +27,8 @@ const TradeStatistics = () => {
     setIsLoading(true);
     try {
       const url = date ? `/api/trades/statistics?date=${date}` : '/api/trades/statistics';
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Failed to fetch statistics');
-      }
-      const data = await response.json();
-      setStatistics(data);
+      const response = await axios.get(url);
+      setStatistics(response.data);
       setError(null);
     } catch (error) {
       console.error('Failed to fetch trade statistics:', error);
@@ -59,7 +58,7 @@ const TradeStatistics = () => {
 
   useEffect(() => {
     handleManualDateInput();
-  }, [year, month, day, handleManualDateInput]);
+  }, [year, month, day]);
 
   const handleSearch = () => {
     if (selectedDate) {
@@ -77,7 +76,6 @@ const TradeStatistics = () => {
           <h2 className="text-xl font-bold">거래 통계 검색</h2>
 
           <div className="space-y-4">
-            {/* 기본 date input with 캘린더 아이콘 */}
             <div className="relative">
               <input
                   type="date"
@@ -93,7 +91,6 @@ const TradeStatistics = () => {
               </button>
             </div>
 
-            {/* 수동 날짜 입력 필드 */}
             <div className="flex gap-2">
               <input
                   type="number"
@@ -127,8 +124,7 @@ const TradeStatistics = () => {
             <button
                 onClick={handleSearch}
                 disabled={!selectedDate || isLoading}
-                className={`w-full px-4 py-2 rounded-lg text-white 
-              ${!selectedDate || isLoading
+                className={`w-full px-4 py-2 rounded-lg text-white ${!selectedDate || isLoading
                     ? 'bg-gray-400'
                     : 'bg-blue-500 hover:bg-blue-600'}`}
             >
@@ -144,10 +140,13 @@ const TradeStatistics = () => {
                 <p><span className="font-bold">포착종목수:</span> {statistics.total_trades}</p>
                 <p>
                   <span className="font-bold">승리 :</span> {statistics.total_wins}
-                  <span className="font-bold"> 패배 :</span> {statistics.total_trades- statistics.total_wins}
+                  <span className="font-bold"> 패배 :</span> {statistics.total_trades - statistics.total_wins}
                 </p>
                 <p>
                   <span className="font-bold">승률 :</span> {calculatePercentage(statistics.total_wins)}
+                </p>
+                <p>
+                  <span className="font-bold">평균 도달시간 :</span> {statistics.avg_reach_time}
                 </p>
               </div>
           )}

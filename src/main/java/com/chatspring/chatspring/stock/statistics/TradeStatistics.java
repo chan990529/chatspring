@@ -32,6 +32,9 @@ public class TradeStatistics {
     @Column(name = "count_sell_price_3")
     private Integer countSellPrice3;
 
+    @Column(name = "avg_reach_time")
+    private String avgReachTime;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -87,5 +90,12 @@ public class TradeStatistics {
 
     public void setCountSellPrice3(Integer countSellPrice3) {
         this.countSellPrice3 = countSellPrice3;
+    }
+
+    public String getAvgReachTime() {return avgReachTime;
+    }
+
+    public void setAvgReachTime(String avgReachTime) {
+        this.avgReachTime = avgReachTime;
     }
 }

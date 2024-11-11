@@ -20,9 +20,11 @@ public class TradeStatisticsService {
         TradeStatistics tradeStatistics = new TradeStatistics();
         tradeStatistics.setDate(LocalDate.parse(statistics.get("date").toString()));
         tradeStatistics.setTotalTrades((Integer) statistics.get("total_trades"));
+        tradeStatistics.setTotalWins((Integer) statistics.get("total_wins"));
         tradeStatistics.setCountSellPrice1((Integer) statistics.get("count_sell_price_1"));
         tradeStatistics.setCountSellPrice2((Integer) statistics.get("count_sell_price_2"));
         tradeStatistics.setCountSellPrice3((Integer) statistics.get("count_sell_price_3"));
+        tradeStatistics.setAvgReachTime((String) statistics.get("avg_reach_time"));
         tradeStatisticsRepository.save(tradeStatistics);
     }
 
@@ -39,6 +41,8 @@ public class TradeStatisticsService {
             statistics.put("count_sell_price_2", stats.getCountSellPrice2());
             statistics.put("count_sell_price_3", stats.getCountSellPrice3());
             statistics.put("total_wins", stats.getTotalWins());
+            statistics.put("avg_reach_time", stats.getAvgReachTime());
+
             return statistics;
         } else {
             throw new RuntimeException("No statistics available for this day.");
@@ -57,6 +61,8 @@ public class TradeStatisticsService {
             statistics.put("count_sell_price_2", stats.getCountSellPrice2());
             statistics.put("count_sell_price_3", stats.getCountSellPrice3());
             statistics.put("total_wins", stats.getTotalWins());
+            statistics.put("avg_reach_time", stats.getAvgReachTime());
+
             return statistics;
         } else {
             throw new RuntimeException("No statistics available for today.");
