@@ -4,8 +4,9 @@ import { Card, CardContent, Typography, Grid, TextField, useMediaQuery, Avatar, 
 import CloseImage from './Close.png';
 import OpenImage from './Open.png';
 import EmptyImage from './Empty.png';
-axios.defaults.baseURL = 'https://scalping.app';
 import './Scalping.css';  // CSS 파일을 따로 관리
+axios.defaults.baseURL = 'https://scalping.app';
+
 // axios.defaults.baseURL = 'http://localhost:8080';
 
 const ScriptStatus = () => {
