@@ -4,25 +4,42 @@ import { Link } from 'react-router-dom';
 
 function Header() {
     return (
-        <header style={{ padding: '10px 20px', backgroundColor: '#007bff', color: '#fff' }}>
-            <nav style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                {/* 왼쪽 로고 또는 제목 */}
-                <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-                    <Link to="/Scalping" style={{ color: '#fff', textDecoration: 'none' }}>
-                        스캘핑연구소
-                    </Link>
-                </div>
+        <header style={{ backgroundColor: '#007bff', color: '#fff', display: 'flex' }}>
+            {/* 왼쪽 절반 클릭 영역 */}
+            <Link
+                to="/Scalping"
+                style={{
+                    color: '#fff',
+                    textDecoration: 'none',
+                    width: '50%',
+                    padding: '10px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    fontSize: '18px'
+                }}
+            >
+                스캘핑연구소
+            </Link>
 
-                {/* 오른쪽 메뉴 항목 */}
-                <ul style={{ listStyle: 'none', display: 'flex', gap: '20px', margin: 0 }}>
-                    <li>
-                        <Link to="/Statistics" style={{ color: '#fff', textDecoration: 'none' }}>
-                            데이터센터
-                        </Link>
-                    </li>
-                    {/* 필요에 따라 더 많은 메뉴 항목 추가 가능 */}
-                </ul>
-            </nav>
+            {/* 오른쪽 절반 클릭 영역 */}
+            <Link
+                to="/Statistics"
+                style={{
+                    color: '#fff',
+                    textDecoration: 'none',
+                    width: '50%',
+                    padding: '10px 0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 'bold',
+                    fontSize: '18px'
+                }}
+            >
+                데이터센터
+            </Link>
         </header>
     );
 }
