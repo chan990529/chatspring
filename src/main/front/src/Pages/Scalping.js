@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, TextField, useMediaQuery, Avatar, Box } from '@mui/material';
-import CloseImage from 'Close.png';
-import OpenImage from 'Open.png';
-import EmptyImage from 'Empty.png';
+import CloseImage from './Close.png';
+import OpenImage from './Open.png';
+import EmptyImage from './Empty.png';
 axios.defaults.baseURL = 'https://scalping.app';
 // axios.defaults.baseURL = 'http://localhost:8080';
 
