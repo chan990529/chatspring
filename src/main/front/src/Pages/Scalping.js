@@ -56,59 +56,64 @@ const ScriptStatus = () => {
 };
 
 const VirtualTradeCard = ({ trade }) => {
-  // 매매 결과에 따른 이미지 경로 설정
-  let tradeResultImage = CloseImage;
-  if (trade.tradeResult === "승리") {
-    tradeResultImage = OpenImage;
-  } else if (trade.tradeResult === "패배") {
-    tradeResultImage = EmptyImage;
-  }
+    let tradeResultImage = CloseImage;
+    if (trade.tradeResult === "승리") {
+        tradeResultImage = OpenImage;
+    } else if (trade.tradeResult === "패배") {
+        tradeResultImage = EmptyImage;
+    }
 
-  return (
-      <Card
-          sx={{
-            marginBottom: 2,
-            backgroundColor:
-                trade.tradeResult === "승리" ? '#54ED7F' :
-                    trade.tradeResult === "패배" ? '#DB4455' :
-                        trade.tradeResult === "N/A" ? '#B0B0B0' : 'default',
-            position : 'relative'
-          }}
-      >
-        <CardContent>
-          {/* Avatar와 제목 부분을 묶어서 정렬 */}
-          <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
-            <Avatar
-                src={tradeResultImage}
-                alt="매매 결과"
-                sx={{
-                  width: 70,
-                  height: 80,
-                  position : 'absolute',
-                  top: 10,
-                  right: 10,
-                  borderRadius: 0
-                }}
-            />
-            <Typography variant="h6"><strong>종목명:</strong> {trade.stockName}</Typography>
-          </Box>
+    return (
+        <Card
+            sx={{
+                marginBottom: 2,
+                backgroundColor:
+                    trade.tradeResult === "승리" ? '#54ED7F' :
+                        trade.tradeResult === "패배" ? '#DB4455' :
+                            trade.tradeResult === "N/A" ? '#B0B0B0' : 'default',
+                position: 'relative'
+            }}
+        >
+            <CardContent>
+                {/* Avatar와 제목 부분을 묶어서 정렬 */}
+                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2, gap: 2 }}>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            wordBreak: 'break-word',
+                            whiteSpace: 'normal',
+                            flex: 1
+                        }}
+                    >
+                        <strong>종목명:</strong> {trade.stockName}
+                    </Typography>
+                    <Avatar
+                        src={tradeResultImage}
+                        alt="매매 결과"
+                        sx={{
+                            width: 70,
+                            height: 80,
+                            borderRadius: 0
+                        }}
+                    />
+                </Box>
 
-          {/* 나머지 정보 표시 */}
-          <Typography><strong>평단가:</strong> {trade.buyPrice}</Typography>
-          <Typography><strong>매수일:</strong> {new Date(trade.buyTime).toLocaleString('ko-KR')}</Typography>
-          <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
-          <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
-          <Typography><strong>손절가:</strong> {trade.stopLossPrice}</Typography>
-          <Typography><strong>조건식:</strong> {trade.conditionType}</Typography>
-          <Typography><strong>1% 매도가:</strong> {trade.sellPrice1 ? trade.sellPrice1 : 'N/A'}</Typography>
-          <Typography><strong>1% 경과시간:</strong> {trade.reachTime1}</Typography>
-          <Typography><strong>2% 매도가:</strong> {trade.sellPrice2 ? trade.sellPrice2 : 'N/A'}</Typography>
-          <Typography><strong>2% 경과시간:</strong> {trade.reachTime2}</Typography>
-          <Typography><strong>3% 매도가:</strong> {trade.sellPrice3 ? trade.sellPrice3 : 'N/A'}</Typography>
-          <Typography><strong>3% 경과시간:</strong> {trade.reachTime3}</Typography>
-        </CardContent>
-      </Card>
-  );
+                {/* 나머지 정보 표시 */}
+                <Typography><strong>평단가:</strong> {trade.buyPrice}</Typography>
+                <Typography><strong>매수일:</strong> {new Date(trade.buyTime).toLocaleString('ko-KR')}</Typography>
+                <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
+                <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
+                <Typography><strong>손절가:</strong> {trade.stopLossPrice}</Typography>
+                <Typography><strong>조건식:</strong> {trade.conditionType}</Typography>
+                <Typography><strong>1% 매도가:</strong> {trade.sellPrice1 ? trade.sellPrice1 : 'N/A'}</Typography>
+                <Typography><strong>1% 경과시간:</strong> {trade.reachTime1}</Typography>
+                <Typography><strong>2% 매도가:</strong> {trade.sellPrice2 ? trade.sellPrice2 : 'N/A'}</Typography>
+                <Typography><strong>2% 경과시간:</strong> {trade.reachTime2}</Typography>
+                <Typography><strong>3% 매도가:</strong> {trade.sellPrice3 ? trade.sellPrice3 : 'N/A'}</Typography>
+                <Typography><strong>3% 경과시간:</strong> {trade.reachTime3}</Typography>
+            </CardContent>
+        </Card>
+    );
 };
 
 const VirtualTradeTable = () => {
