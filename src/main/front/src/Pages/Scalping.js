@@ -69,7 +69,8 @@ const VirtualTradeCard = ({ trade }) => {
             backgroundColor:
                 trade.tradeResult === "승리" ? '#54ED7F' :
                     trade.tradeResult === "패배" ? '#DB4455' :
-                        trade.tradeResult === "N/A" ? '#B0B0B0' : 'default'
+                        trade.tradeResult === "N/A" ? '#B0B0B0' : 'default',
+            position : 'relative'
           }}
       >
         <CardContent>
@@ -79,12 +80,12 @@ const VirtualTradeCard = ({ trade }) => {
                 src={tradeResultImage}
                 alt="매매 결과"
                 sx={{
-                  width: 90,
-                  height: 90,
-                  marginRight: 2,
+                  width: 70,
+                  height: 80,
                   position : 'absolute',
-                  top: 16,
-                  right: 16
+                  top: 10,
+                  right: 10,
+                  borderRadius: 0
                 }}
             />
             <Typography variant="h6"><strong>종목명:</strong> {trade.stockName}</Typography>

@@ -3,6 +3,7 @@ import { Calendar } from 'lucide-react';
 import { Card } from '@mui/material';
 import axios from "axios";
 axios.defaults.baseURL = 'https://scalping.app';
+// axios.defaults.baseURL = 'http://localhost:8080';
 
 const TradeStatistics = () => {
   const [statistics, setStatistics] = useState({
