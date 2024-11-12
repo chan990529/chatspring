@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, TextField, useMediaQuery, Avatar, Box } from '@mui/material';
+import CloseImage from '../Image/Close.png';
+import OpenImage from '../Image/Open.png';
+import EmptyImage from '../Image/Empty.png';
 axios.defaults.baseURL = 'https://scalping.app';
 // axios.defaults.baseURL = 'http://localhost:8080';
 
@@ -52,11 +55,11 @@ const ScriptStatus = () => {
 
 const VirtualTradeCard = ({ trade }) => {
   // 매매 결과에 따른 이미지 경로 설정
-  let tradeResultImage = '../Image/Close.png';
-  if (trade.tradeResult === '승리') {
-    tradeResultImage = '../Image/Open.png';
-  } else if (trade.tradeResult === '패배') {
-    tradeResultImage = '../Image/Empty.png';
+  let tradeResultImage = CloseImage;
+  if (trade.tradeResult === "승리") {
+    tradeResultImage = OpenImage;
+  } else if (trade.tradeResult === "패배") {
+    tradeResultImage = EmptyImage;
   }
 
   return (
@@ -77,10 +80,10 @@ const VirtualTradeCard = ({ trade }) => {
                 src={tradeResultImage}
                 alt="매매 결과"
                 sx={{
-                  width: 56,
-                  height: 56,
+                  width: 90,
+                  height: 90,
                   marginRight: 2,
-                  position : 'relative'
+                  position : 'absolute'
                 }}
             />
             <Typography variant="h6"><strong>종목명:</strong> {trade.stockName}</Typography>
