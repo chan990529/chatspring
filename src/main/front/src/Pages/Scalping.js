@@ -52,11 +52,11 @@ const ScriptStatus = () => {
 
 const VirtualTradeCard = ({ trade }) => {
   // 매매 결과에 따른 이미지 경로 설정
-  let tradeResultImage = '/Image/Close.png';
+  let tradeResultImage = '../Image/Close.png';
   if (trade.tradeResult === '승리') {
-    tradeResultImage = '/Image/Open.png';
+    tradeResultImage = '../Image/Open.png';
   } else if (trade.tradeResult === '패배') {
-    tradeResultImage = '/Image/Empty.png';
+    tradeResultImage = '../Image/Empty.png';
   }
 
   return (
