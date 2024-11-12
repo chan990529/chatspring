@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, TextField, useMediaQuery, Avatar, Box } from '@mui/material';
-import CloseImage from '../Image/Close.png';
-import OpenImage from '../Image/Open.png';
-import EmptyImage from '../Image/Empty.png';
+import CloseImage from 'Close.png';
+import OpenImage from 'Open.png';
+import EmptyImage from 'Empty.png';
 axios.defaults.baseURL = 'https://scalping.app';
 // axios.defaults.baseURL = 'http://localhost:8080';
 
@@ -69,8 +69,7 @@ const VirtualTradeCard = ({ trade }) => {
             backgroundColor:
                 trade.tradeResult === "승리" ? '#54ED7F' :
                     trade.tradeResult === "패배" ? '#DB4455' :
-                        trade.tradeResult === "N/A" ? '#B0B0B0' : 'default',
-            position : 'relative'
+                        trade.tradeResult === "N/A" ? '#B0B0B0' : 'default'
           }}
       >
         <CardContent>
@@ -83,7 +82,9 @@ const VirtualTradeCard = ({ trade }) => {
                   width: 90,
                   height: 90,
                   marginRight: 2,
-                  position : 'absolute'
+                  position : 'absolute',
+                  top: 16,
+                  right: 16
                 }}
             />
             <Typography variant="h6"><strong>종목명:</strong> {trade.stockName}</Typography>
