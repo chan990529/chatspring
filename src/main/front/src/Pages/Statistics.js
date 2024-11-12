@@ -83,42 +83,6 @@ const TradeStatistics = () => {
                   onChange={handleDateChange}
                   className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
               />
-              <button
-                  onClick={() => setShowDatePicker(true)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2"
-              >
-                <Calendar className="h-5 w-5 text-gray-500" />
-              </button>
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                  type="number"
-                  placeholder="년도"
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  className="w-1/3 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="2000"
-                  max="2099"
-              />
-              <input
-                  type="number"
-                  placeholder="월"
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  className="w-1/3 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="1"
-                  max="12"
-              />
-              <input
-                  type="number"
-                  placeholder="일"
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                  className="w-1/3 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  min="1"
-                  max="31"
-              />
             </div>
 
             <button

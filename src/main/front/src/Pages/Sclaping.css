@@ -1,0 +1,13 @@
+/* 기본 마진 */
+.container {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* PC 화면일 때만 마진 적용 */
+@media (min-width: 1024px) {
+    .container {
+        margin-left: 40px;  /* 원하는 left margin */
+        margin-right: 40px; /* 원하는 right margin */
+    }
+}
