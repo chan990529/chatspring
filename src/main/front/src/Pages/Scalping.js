@@ -5,6 +5,10 @@ import CloseImage from './Close.png';
 import OpenImage from './Open.png';
 import EmptyImage from './Empty.png';
 import './Scalping.css';  // CSS 파일을 따로 관리
+import ScrollToTop from './ScrollToTop';
+
+
+
 axios.defaults.baseURL = 'https://scalping.app';
 
 // axios.defaults.baseURL = 'http://localhost:8080';
@@ -220,6 +224,7 @@ const MonitoringAndTrades = () => {
       <Grid item xs={12} md={6}>
         <VirtualTradeTable />
       </Grid>
+        <ScrollToTop/>
     </Grid>
   );
 };
