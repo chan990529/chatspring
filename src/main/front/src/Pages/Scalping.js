@@ -214,24 +214,34 @@ const VirtualTradeTable = () => {
 };
 
 const MonitoringAndTrades = () => {
-  const isMobile = useMediaQuery('(max-width:600px)');
+    const isMobile = useMediaQuery('(max-width:600px)');
+    const containerRef = useRef(null);
 
-  // Grid 컨테이너 참조 생성
-  const gridContainerRef = useRef(null);
-
-  return (
-      <>
-    <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
-      <Grid item xs={12} md={6}>
-        <ScriptStatus />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <VirtualTradeTable />
-      </Grid>
-        </Grid>
-    <ScrollToTop scrollRef={gridContainerRef}/>
-      </>
-  );
+    return (
+        <Box
+            ref={containerRef}
+            sx={{
+                height: '100vh',
+                overflow: 'auto',
+                position: 'relative',
+                padding: 2
+            }}
+        >
+            <Grid
+                container
+                spacing={2}
+                direction={isMobile ? 'column' : 'row'}
+            >
+                <Grid item xs={12} md={6}>
+                    <ScriptStatus />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <VirtualTradeTable />
+                </Grid>
+            </Grid>
+            <ScrollToTop scrollRef={containerRef} />
+        </Box>
+    );
 };
 
 export default MonitoringAndTrades;
