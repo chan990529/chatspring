@@ -1,7 +1,7 @@
 @font-face {
   font-family : "GmarketSansTTFLight";
   font-weight : normal;
-  src : url('/src/main/front/public/fonts/GmarketSansTTFLight.ttf') format("truetype");
+  src: url("home/ubuntu/chatspring/src/main/front/public/fonts/GmarketSansTTFLight.ttf") format("truetype");
 }
 
 
