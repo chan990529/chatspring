@@ -217,6 +217,7 @@ const MonitoringAndTrades = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   return (
+      <>
     <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
       <Grid item xs={12} md={6}>
         <ScriptStatus />
@@ -224,8 +225,9 @@ const MonitoringAndTrades = () => {
       <Grid item xs={12} md={6}>
         <VirtualTradeTable />
       </Grid>
-        <ScrollToTop/>
-    </Grid>
+        </Grid>
+    <ScrollToTop/>
+      </>
   );
 };
 

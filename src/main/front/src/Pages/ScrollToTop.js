@@ -9,7 +9,7 @@ const ScrollToTop = () => {
     // 스크롤이 일정 수준 이상 내려갔을 때만 버튼을 표시
     useEffect(() => {
         const toggleVisibility = () => {
-            if (window.scrollY > 300) {
+            if (window.scrollY > 100) {
                 setIsVisible(true);
             } else {
                 setIsVisible(false);
