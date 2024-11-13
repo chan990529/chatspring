@@ -216,6 +216,9 @@ const VirtualTradeTable = () => {
 const MonitoringAndTrades = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
+  // Grid 컨테이너 참조 생성
+  const gridContainerRef = useReft(null);
+
   return (
       <>
     <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
@@ -226,7 +229,7 @@ const MonitoringAndTrades = () => {
         <VirtualTradeTable />
       </Grid>
         </Grid>
-    <ScrollToTop/>
+    <ScrollToTop scrollRef={gridContainerRef}/>
       </>
   );
 };
