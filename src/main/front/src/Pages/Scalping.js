@@ -219,43 +219,29 @@ const MonitoringAndTrades = () => {
 
     return (
         <Box
+            ref={containerRef}
             sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minHeight: '100vh',
+                height: '100vh',
+                overflow: 'auto',
+                position: 'relative',
+                padding: 2
             }}
         >
-            {/* 헤더나 다른 고정 컴포넌트들이 있다면 여기에 배치 */}
-
-            <Box
-                ref={containerRef}
-                sx={{
-                    flex: 1,
-                    overflow: 'auto',
-                    position: 'relative',
-                    padding: 2,
-                    // 브라우저 호환성을 위한 추가 스타일
-                    height: 0, // Firefox에서 필요
-                    minHeight: 'calc(100vh - 64px)', // 상단 앱바가 있다면 그 높이만큼 빼줌
-                }}
+            <Grid
+                container
+                spacing={2}
+                direction={isMobile ? 'column' : 'row'}
             >
-                <Grid
-                    container
-                    spacing={2}
-                    direction={isMobile ? 'column' : 'row'}
-                >
-                    <Grid item xs={12} md={6}>
-                        <ScriptStatus />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <VirtualTradeTable />
-                    </Grid>
+                <Grid item xs={12} md={6}>
+                    <ScriptStatus />
                 </Grid>
-            </Box>
+                <Grid item xs={12} md={6}>
+                    <VirtualTradeTable />
+                </Grid>
+            </Grid>
             <ScrollToTop scrollRef={containerRef} />
         </Box>
     );
 };
-
 
 export default MonitoringAndTrades;

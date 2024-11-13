@@ -1,6 +1,7 @@
 @font-face {
   font-family : "GmarketSansTTFLight";
   font-weight : normal;
+  font-style: normal;
   src : url('./fonts/GmarketSansTTFLight.ttf') format("truetype");
 }
 
