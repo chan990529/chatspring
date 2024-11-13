@@ -4,7 +4,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const ScrollToTop = () => {
     const scrollToTop = () => {
-        document.documentElement.scrollTo({
+        window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });

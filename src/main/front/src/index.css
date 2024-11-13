@@ -1,22 +1,20 @@
 @font-face {
   font-family : "GmarketSansTTFLight";
   font-weight : normal;
-  src : url("./fonts/GmarketSansTTFLight.ttf") format("truetype");
+  src : url('../public/fonts/GmarketSansTTFLight.ttf') format("truetype");
 }
 
 
 body {
   margin: 0;
-  /*font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',*/
-  /*  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',*/
-  /*  sans-serif;*/
-  font-family: "GmarketSansTTFLight";
+  font-family: "GmarketSansTTFLight", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  /*font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',*/
-  /*  monospace;*/
-  font-family : "GmarketSansTTFLight";
+  font-family: "GmarketSansTTFLight", source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
