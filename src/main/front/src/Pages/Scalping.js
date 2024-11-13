@@ -217,7 +217,7 @@ const MonitoringAndTrades = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
 
   // Grid 컨테이너 참조 생성
-  const gridContainerRef = useReft(null);
+  const gridContainerRef = useRef(null);
 
   return (
       <>
