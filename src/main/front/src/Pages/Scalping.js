@@ -217,6 +217,18 @@ const MonitoringAndTrades = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
 
+    const fetchTodayTrades = () => {
+        const today = new Date().toISOString().split('T')[0];
+        axios.get(`/api/trades?date=${today}`)
+            .then(response => {
+                setVirtualTrades(response.data);
+                setIsSearching(false);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the virtual trades!', error);
+            });
+    };
+
     return (
         <Box
             ref={containerRef}
