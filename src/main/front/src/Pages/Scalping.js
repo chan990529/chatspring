@@ -189,6 +189,7 @@ const VirtualTradeTable = ({ refreshKey }) => {
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult); // 결과가 없는 경우
 
+            // 검색어가 비어 있지 않으면 모든 날짜의 데이터를 표시하고, 비어 있을 때는 오늘 날짜 데이터만 표시
             const today = new Date();
             const tradeDate = new Date(trade.buyTime);
             const isSameDay =
@@ -196,7 +197,6 @@ const VirtualTradeTable = ({ refreshKey }) => {
                 today.getMonth() === tradeDate.getMonth() &&
                 today.getDate() === tradeDate.getDate();
 
-            // 검색어가 있을 때는 모든 날짜의 데이터를 표시하고, 없을 때는 오늘 날짜 데이터만 표시
             return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
         })
         .sort((a, b) =>
@@ -222,7 +222,7 @@ const VirtualTradeTable = ({ refreshKey }) => {
                     <MenuItem value="all">전체</MenuItem>
                     <MenuItem value="승리">승리</MenuItem>
                     <MenuItem value="패배">패배</MenuItem>
-                    <MenuItem value="none">결과 없음</MenuItem>
+                    <MenuItem value="none">진행중</MenuItem>
                 </Select>
             </FormControl>
 
