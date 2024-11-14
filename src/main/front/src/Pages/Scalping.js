@@ -120,14 +120,15 @@ const VirtualTradeCard = ({ trade }) => {
     );
 };
 
-const VirtualTradeTable = () => {
-  const [virtualTrades, setVirtualTrades] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
+const VirtualTradeTable = ({ onRefresh }) => {
+    const [virtualTrades, setVirtualTrades] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
 
-  useEffect(() => {
-    fetchTodayTrades();
-  }, []);
+    useEffect(() => {
+        onRefresh();
+    }, [onRefresh]);
+
 
   const fetchTodayTrades = () => {
     const today = new Date().toISOString().split('T')[0];
@@ -216,6 +217,8 @@ const VirtualTradeTable = () => {
 const MonitoringAndTrades = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
+    const [virtualTrades, setVirtualTrades] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
 
     const fetchTodayTrades = () => {
         const today = new Date().toISOString().split('T')[0];
@@ -225,31 +228,41 @@ const MonitoringAndTrades = () => {
                 setIsSearching(false);
             })
             .catch(error => {
-                console.error('There was an error fetching the virtual trades!', error);
+                console.error('Error fetching virtual trades:', error);
+                setIsSearching(false);
             });
     };
 
+    const handleSearch = (searchQuery) => {
+        if (searchQuery.trim() !== '') {
+            setIsSearching(true);
+            axios.get(`/api/trades?search=${searchQuery}`)
+                .then(response => {
+                    setVirtualTrades(response.data);
+                    setIsSearching(false);
+                })
+                .catch(error => {
+                    console.error('Error fetching virtual trades:', error);
+                    setIsSearching(false);
+                });
+        } else {
+            fetchTodayTrades();
+            setIsSearching(false);
+        }
+    };
+
     return (
-        <Box
-            ref={containerRef}
-            sx={{
-                height: '100vh',
-                overflow: 'auto',
-                position: 'relative',
-                padding: 2,
-                gap : 1
-            }}
-        >
-            <Grid
-                container
-                spacing={2}
-                direction={isMobile ? 'column' : 'row'}
-            >
+        <Box ref={containerRef}>
+            <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
                 <Grid item xs={12} md={6}>
                     <ScriptStatus />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <VirtualTradeTable />
+                    <VirtualTradeTable
+                        onRefresh={fetchTodayTrades}
+                        onSearch={handleSearch}
+                        isSearching={isSearching}
+                    />
                 </Grid>
             </Grid>
             <RefreshableGrid onRefresh={fetchTodayTrades} />
