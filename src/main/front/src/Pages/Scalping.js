@@ -240,7 +240,7 @@ const MonitoringAndTrades = () => {
                     <VirtualTradeTable />
                 </Grid>
             </Grid>
-            <RefreshableGrid />
+            <RefreshableGrid onRefresh={fetchTodayTrades} />
             <ScrollToTop scrollRef={containerRef} />
         </Box>
     );
