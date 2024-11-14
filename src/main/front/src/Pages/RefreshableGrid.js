@@ -13,10 +13,6 @@ function RefreshableGrid() {
 
     useEffect(() => {
         fetchGridData(); // 컴포넌트가 처음 마운트될 때 데이터 로드
-
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const handleRefresh = () => {
