@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Header() {
     return (
-        <header style={{ backgroundColor: '#007bff', color: '#fff', display: 'flex' }}>
+        <header style={{ backgroundColor: '#007bff', color: '#fff', display: 'flex'}}>
             {/* 왼쪽 절반 클릭 영역 */}
             <Link
                 to="/Scalping"

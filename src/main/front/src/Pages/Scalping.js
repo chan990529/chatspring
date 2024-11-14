@@ -6,7 +6,7 @@ import OpenImage from './Open.png';
 import EmptyImage from './Empty.png';
 import './Scalping.css';  // CSS 파일을 따로 관리
 import ScrollToTop from './ScrollToTop';
-
+import RefreshableGrid from "./RefreshableGrid";
 
 
 axios.defaults.baseURL = 'https://scalping.app';
@@ -74,7 +74,7 @@ const VirtualTradeCard = ({ trade }) => {
                 backgroundColor:
                     trade.tradeResult === "승리" ? '#54ED7F' :
                         trade.tradeResult === "패배" ? '#DB4455' :
-                            trade.tradeResult === "N/A" ? '#B0B0B0' : 'default',
+                            trade.tradeResult === "" ? '#B0B0B0' : 'default',
                 position: 'relative'
             }}
         >
@@ -240,6 +240,7 @@ const MonitoringAndTrades = () => {
                 </Grid>
             </Grid>
             <ScrollToTop scrollRef={containerRef} />
+            <RefreshableGrid />
         </Box>
     );
 };
