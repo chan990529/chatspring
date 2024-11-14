@@ -8,7 +8,7 @@ function RefreshableGrid() {
     const fetchGridData = async () => {
         try {
             const today = new Date().toISOString().split('T')[0];
-            const response = await fetch('https://scalping.app/api/trades?date=${today}');
+            const response = await fetch(`https://scalping.app/api/trades?date=${today}`);
             if (!response.ok) {
                 throw new Error(`HTTP error ${response.status}`);
             }
