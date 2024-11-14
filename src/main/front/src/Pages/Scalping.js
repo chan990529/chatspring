@@ -120,104 +120,9 @@ const VirtualTradeCard = ({ trade }) => {
     );
 };
 
-const VirtualTradeTable = ({ onRefresh }) => {
+const VirtualTradeTable = React.forwardRef((props, ref) => {
     const [virtualTrades, setVirtualTrades] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isSearching, setIsSearching] = useState(false);
-
-    useEffect(() => {
-        onRefresh();
-    }, [onRefresh]);
-
-
-  const fetchTodayTrades = () => {
-    const today = new Date().toISOString().split('T')[0];
-    axios.get(`/api/trades?date=${today}`)
-      .then(response => {
-        setVirtualTrades(response.data);
-        setIsSearching(false);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the virtual trades!', error);
-      });
-  };
-
-  const handleSearch = () => {
-    if (searchQuery.trim() !== '') {
-      setIsSearching(true);
-      // 검색 시에는 날짜 제한 없이 전체 검색
-      axios.get(`/api/trades?search=${searchQuery}`)
-        .then(response => {
-          setVirtualTrades(response.data);
-        })
-        .catch(error => {
-          console.error('There was an error fetching the virtual trades!', error);
-        });
-    } else {
-      // 검색어가 비었을 때는 다시 오늘 날짜 데이터만 표시
-      fetchTodayTrades();
-    }
-  };
-
-  const handleSearchChange = (e) => {
-    const newQuery = e.target.value;
-    setSearchQuery(newQuery);
-    
-    // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
-    if (newQuery === '') {
-      fetchTodayTrades();
-    }
-  };
-
-  const filteredTrades = virtualTrades.filter(trade => {
-    const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (isSearching) {
-      // 검색 중일 때는 모든 날짜의 데이터 표시
-      return matchesSearch;
-    } else {
-      // 검색 중이 아닐 때는 오늘 날짜 데이터만 표시
-      const today = new Date();
-      const tradeDate = new Date(trade.buyTime);
-      const isSameDay = 
-        today.getFullYear() === tradeDate.getFullYear() &&
-        today.getMonth() === tradeDate.getMonth() &&
-        today.getDate() === tradeDate.getDate();
-      
-      return isSameDay && matchesSearch;
-    }
-  });
-
-  return (
-    <div>
-      <TextField
-        label="종목명 검색"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            handleSearch();
-          }
-        }}
-      />
-      {filteredTrades.length > 0 ? (
-        filteredTrades.map((trade) => (
-          <VirtualTradeCard key={trade.tradeId} trade={trade} />
-        ))
-      ) : (
-        <Typography>해당 종목이 없습니다.</Typography>
-      )}
-    </div>
-  );
-};
-
-const MonitoringAndTrades = () => {
-    const isMobile = useMediaQuery('(max-width:600px)');
-    const containerRef = useRef(null);
-    const [virtualTrades, setVirtualTrades] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
 
     const fetchTodayTrades = () => {
@@ -228,45 +133,107 @@ const MonitoringAndTrades = () => {
                 setIsSearching(false);
             })
             .catch(error => {
-                console.error('Error fetching virtual trades:', error);
-                setIsSearching(false);
+                console.error('There was an error fetching the virtual trades!', error);
             });
     };
 
-    const handleSearch = (searchQuery) => {
+    useImperativeHandle(ref, () => ({
+        fetchTodayTrades
+    }));
+
+    useEffect(() => {
+        fetchTodayTrades();
+    }, []);
+
+    const handleSearch = () => {
         if (searchQuery.trim() !== '') {
             setIsSearching(true);
             axios.get(`/api/trades?search=${searchQuery}`)
                 .then(response => {
                     setVirtualTrades(response.data);
-                    setIsSearching(false);
                 })
                 .catch(error => {
-                    console.error('Error fetching virtual trades:', error);
-                    setIsSearching(false);
+                    console.error('There was an error fetching the virtual trades!', error);
                 });
         } else {
             fetchTodayTrades();
-            setIsSearching(false);
         }
     };
 
+    const handleSearchChange = (e) => {
+        const newQuery = e.target.value;
+        setSearchQuery(newQuery);
+        if (newQuery === '') {
+            fetchTodayTrades();
+        }
+    };
+
+    const filteredTrades = virtualTrades.filter(trade => {
+        const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
+        if (isSearching) {
+            return matchesSearch;
+        } else {
+            const today = new Date();
+            const tradeDate = new Date(trade.buyTime);
+            return today.toDateString() === tradeDate.toDateString() && matchesSearch;
+        }
+    });
+
     return (
-        <Box ref={containerRef}>
-            <Grid container spacing={2} direction={isMobile ? 'column' : 'row'}>
+        <div>
+            <TextField
+                label="종목명 검색"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                        handleSearch();
+                    }
+                }}
+            />
+            {filteredTrades.length > 0 ? (
+                filteredTrades.map((trade) => (
+                    <VirtualTradeCard key={trade.tradeId} trade={trade} />
+                ))
+            ) : (
+                <Typography>해당 종목이 없습니다.</Typography>
+            )}
+        </div>
+    );
+});
+
+const MonitoringAndTrades = () => {
+    const isMobile = useMediaQuery('(max-width:600px)');
+    const containerRef = useRef(null);
+    const virtualTradeTableRef = useRef(null);
+    return (
+        <Box
+            ref={containerRef}
+            sx={{
+                height: '100vh',
+                overflow: 'auto',
+                position: 'relative',
+                padding: 2,
+                gap : 1
+            }}
+        >
+            <Grid
+                container
+                spacing={2}
+                direction={isMobile ? 'column' : 'row'}
+            >
                 <Grid item xs={12} md={6}>
                     <ScriptStatus />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <VirtualTradeTable
-                        onRefresh={fetchTodayTrades}
-                        onSearch={handleSearch}
-                        isSearching={isSearching}
-                    />
+                    <VirtualTradeTable />
                 </Grid>
             </Grid>
-            <RefreshableGrid onRefresh={fetchTodayTrades} />
             <ScrollToTop scrollRef={containerRef} />
+            <RefreshableGrid onRefresh={virtualTradeTableRef.current?.fetchTodayTrades} />
         </Box>
     );
 };
