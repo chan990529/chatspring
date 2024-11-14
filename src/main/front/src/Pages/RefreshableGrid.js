@@ -6,9 +6,18 @@ function RefreshableGrid() {
     const [gridData, setGridData] = useState([]);
 
     const fetchGridData = async () => {
-        // 여기에서 API를 호출하거나 데이터를 불러옵니다.
-        const data = await fetch("API_ENDPOINT").then((res) => res.json());
-        setGridData(data);
+        try {
+            const today = new Date().toISOString().split('T')[0];
+            const response = await fetch('https://scalping.app/api/trades?date=${today}');
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+            const data = await response.json();
+            setGridData(data);
+        } catch (error) {
+            console.error('Error fetching grid data:', error);
+            // 오류 메시지 표시 등의 처리
+        }
     };
 
     useEffect(() => {
@@ -16,34 +25,22 @@ function RefreshableGrid() {
     }, []);
 
     const handleRefresh = () => {
-        fetchGridData(); // 데이터 다시 로드
+        fetchGridData();
     };
 
     return (
-        <div>
-            <Grid container spacing={2}>
-                {gridData.map((item, index) => (
-                    <Grid item xs={4} key={index}>
-                        <div>{item.name}</div>
-                    </Grid>
-                ))}
-            </Grid>
-
-
-                <Fab
-                    color="secondary"
-                    onClick={handleRefresh}
-                    sx={{
-                        position: 'fixed',
-                        bottom: 16,
-                        right: 16,
-                        zIndex: 1000
-                    }}
-                >
-                    <RefreshIcon />
-                </Fab>
-            )
-        </div>
+        <Fab
+            color="secondary"
+            onClick={handleRefresh}
+            sx={{
+                position: 'fixed',
+                bottom: 16,
+                right: 16,
+                zIndex: 1000
+            }}
+        >
+            <RefreshIcon />
+        </Fab>
     );
 }
 
