@@ -14,49 +14,49 @@ axios.defaults.baseURL = 'https://scalping.app';
 // axios.defaults.baseURL = 'http://localhost:8080';
 
 const ScriptStatus = () => {
-  const [status, setStatus] = useState({
-    status: 'Loading...',
-    lastUpdateTime: 'N/A',
-    details: 'N/A',
-    error: null
-  });
+    const [status, setStatus] = useState({
+        status: 'Loading...',
+        lastUpdateTime: 'N/A',
+        details: 'N/A',
+        error: null
+    });
 
 
 
-  useEffect(() => {
-    const fetchStatus = () => {
-      axios.get('/api/monitoring/status')
-        .then((response) => {
-          setStatus(response.data);
-        })
-        .catch((error) => {
-          console.error('Failed to fetch script status:', error);
-          setStatus((prevStatus) => ({
-            ...prevStatus,
-            error: 'Failed to fetch status'
-          }));
-        });
-    };
+    useEffect(() => {
+        const fetchStatus = () => {
+            axios.get('/api/monitoring/status')
+                .then((response) => {
+                    setStatus(response.data);
+                })
+                .catch((error) => {
+                    console.error('Failed to fetch script status:', error);
+                    setStatus((prevStatus) => ({
+                        ...prevStatus,
+                        error: 'Failed to fetch status'
+                    }));
+                });
+        };
 
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 10000);
+        fetchStatus();
+        const interval = setInterval(fetchStatus, 10000);
 
-    return () => clearInterval(interval);
-  }, []);
+        return () => clearInterval(interval);
+    }, []);
 
-  return (
-    <Card sx={{ marginBottom: 2 }}>
-      <CardContent>
-        <Typography variant="h5">연구소 통신상태</Typography>
-        <Typography><strong>상태:</strong> {status.status}</Typography>
-        <Typography><strong>최종 업데이트:</strong> {status.lastUpdateTime}</Typography>
-        <Typography><strong>내용:</strong> {status.details}</Typography>
-        {status.error && (
-          <Typography color="error"><strong>Error:</strong> {status.error}</Typography>
-        )}
-      </CardContent>
-    </Card>
-  );
+    return (
+        <Card sx={{ marginBottom: 2 }}>
+            <CardContent>
+                <Typography variant="h5">연구소 통신상태</Typography>
+                <Typography><strong>상태:</strong> {status.status}</Typography>
+                <Typography><strong>최종 업데이트:</strong> {status.lastUpdateTime}</Typography>
+                <Typography><strong>내용:</strong> {status.details}</Typography>
+                {status.error && (
+                    <Typography color="error"><strong>Error:</strong> {status.error}</Typography>
+                )}
+            </CardContent>
+        </Card>
+    );
 };
 
 const VirtualTradeCard = ({ trade }) => {
@@ -121,62 +121,64 @@ const VirtualTradeCard = ({ trade }) => {
 };
 
 const VirtualTradeTable = ({ refreshKey }) => {
-  const [virtualTrades, setVirtualTrades] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
-  const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
-  const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
+    const [virtualTrades, setVirtualTrades] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
+    const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
+    const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
 
     useEffect(() => {
         fetchTodayTrades();
     }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
 
-  const fetchTodayTrades = () => {
-    const today = new Date().toISOString().split('T')[0];
-    axios.get(`/api/trades?date=${today}`)
-      .then(response => {
-        setVirtualTrades(response.data);
-        setIsSearching(false);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the virtual trades!', error);
-      });
-  };
+    const fetchTodayTrades = () => {
+        const today = new Date().toISOString().split('T')[0];
+        axios.get(`/api/trades?date=${today}`)
+            .then(response => {
+                setVirtualTrades(response.data);
+                setIsSearching(false);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the virtual trades!', error);
+            });
+    };
 
-  const handleSearch = () => {
-    if (searchQuery.trim() !== '') {
-      setIsSearching(true);
-      // 검색 시에는 날짜 제한 없이 전체 검색
-      axios.get(`/api/trades?search=${searchQuery}`)
-        .then(response => {
-          setVirtualTrades(response.data);
-        })
-        .catch(error => {
-          console.error('불러오기 오류!', error);
-        });
-    } else {
-      // 검색어가 비었을 때는 다시 오늘 날짜 데이터만 표시
-      fetchTodayTrades();
-    }
-  };
+    const handleSearch = () => {
+        if (searchQuery.trim() !== '') {
+            setIsSearching(true);
+            // 검색 시에는 날짜 제한 없이 전체 검색
+            axios.get(`/api/trades?search=${searchQuery}`)
+                .then(response => {
+                    setVirtualTrades(response.data);
+                })
+                .catch(error => {
+                    console.error('불러오기 오류!', error);
+                });
+        } else {
+            // 검색어가 비었을 때는 다시 오늘 날짜 데이터만 표시
+            fetchTodayTrades();
+        }
+    };
 
-  const handleSearchChange = (e) => {
-    const newQuery = e.target.value;
-    setSearchQuery(newQuery);
+    const handleSearchChange = (e) => {
+        const newQuery = e.target.value;
+        setSearchQuery(newQuery);
 
-    // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
-    if (newQuery === '') {
-      fetchTodayTrades();
-    }
-  };
+        // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
+        if (newQuery === '') {
+            fetchTodayTrades();
+        }
+    };
 
-  const handleSortOrderChange = (e) => {
-      setSortOrder(e.target.value);
-  };
+    const handleSortOrderChange = (e) => {
+        setSortOrder(e.target.value);
+    };
 
-  const handleResultFilterChange = (e) => {
-      setResultFilter(e.target.value);
-  };
+    const handleResultFilterChange = (e) => {
+        setResultFilter(e.target.value);
+    };
+
+
     const filteredTrades = virtualTrades
         .filter(trade => {
             const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -187,7 +189,15 @@ const VirtualTradeTable = ({ refreshKey }) => {
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult); // 결과가 없는 경우
 
-            return matchesSearch && matchesResult;
+            const today = new Date();
+            const tradeDate = new Date(trade.buyTime);
+            const isSameDay =
+                today.getFullYear() === tradeDate.getFullYear() &&
+                today.getMonth() === tradeDate.getMonth() &&
+                today.getDate() === tradeDate.getDate();
+
+            // 검색어가 있을 때는 모든 날짜의 데이터를 표시하고, 없을 때는 오늘 날짜 데이터만 표시
+            return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
         })
         .sort((a, b) =>
             sortOrder === 'asc'
