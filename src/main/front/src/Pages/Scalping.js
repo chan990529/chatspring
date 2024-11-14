@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { TextField, Typography, RadioGroup, FormControlLabel, Radio, Card, Select, MenuItem, FormControl, InputLabel, CardContent, Box, Avatar, useMediaQuery, Box, Grid} from '@mui/material';
+import { TextField, Typography, RadioGroup, FormControlLabel, Radio, Card, Select, MenuItem, FormControl, InputLabel, CardContent, Avatar, useMediaQuery, Box, Grid} from '@mui/material';
 import CloseImage from './Close.png';
 import OpenImage from './Open.png';
 import EmptyImage from './Empty.png';
