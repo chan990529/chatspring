@@ -125,9 +125,9 @@ const VirtualTradeTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  useEffect(() => {
-    fetchTodayTrades();
-  }, []);
+    useEffect(() => {
+        fetchTodayTrades();
+    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
 
   const fetchTodayTrades = () => {
     const today = new Date().toISOString().split('T')[0];
@@ -150,7 +150,7 @@ const VirtualTradeTable = () => {
           setVirtualTrades(response.data);
         })
         .catch(error => {
-          console.error('There was an error fetching the virtual trades!', error);
+          console.error('불러오기 오류!', error);
         });
     } else {
       // 검색어가 비었을 때는 다시 오늘 날짜 데이터만 표시
@@ -217,6 +217,11 @@ const MonitoringAndTrades = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
 
+    const [refreshKey, setRefreshKey] = useState(0); // 새로고침을 위한 키 값
+    const refreshTrades = () => {
+        setRefreshKey((prevKey) => prevKey + 1);
+    };
+
     return (
         <Box
             ref={containerRef}
@@ -225,7 +230,7 @@ const MonitoringAndTrades = () => {
                 overflow: 'auto',
                 position: 'relative',
                 padding: 2,
-                gap : 1
+                gap
             }}
         >
             <Grid
@@ -237,11 +242,11 @@ const MonitoringAndTrades = () => {
                     <ScriptStatus />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <VirtualTradeTable />
+                    <VirtualTradeTable refreshKey={refreshKey} />
                 </Grid>
             </Grid>
             <ScrollToTop scrollRef={containerRef} />
-            <RefreshableGrid />
+            <RefreshableGrid onRefresh={refreshTrades} />
         </Box>
     );
 };
