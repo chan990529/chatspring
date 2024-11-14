@@ -120,7 +120,7 @@ const VirtualTradeCard = ({ trade }) => {
     );
 };
 
-const VirtualTradeTable = () => {
+const VirtualTradeTable = ({ refreshKey }) => {
   const [virtualTrades, setVirtualTrades] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -230,7 +230,7 @@ const MonitoringAndTrades = () => {
                 overflow: 'auto',
                 position: 'relative',
                 padding: 2,
-                gap
+                gap : 1
             }}
         >
             <Grid
