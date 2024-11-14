@@ -224,7 +224,8 @@ const MonitoringAndTrades = () => {
                 height: '100vh',
                 overflow: 'auto',
                 position: 'relative',
-                padding: 2
+                padding: 2,
+                gap : 1
             }}
         >
             <Grid
@@ -239,8 +240,8 @@ const MonitoringAndTrades = () => {
                     <VirtualTradeTable />
                 </Grid>
             </Grid>
-            <ScrollToTop scrollRef={containerRef} />
             <RefreshableGrid />
+            <ScrollToTop scrollRef={containerRef} />
         </Box>
     );
 };

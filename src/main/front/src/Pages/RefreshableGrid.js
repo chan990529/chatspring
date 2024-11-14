@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Button } from '@mui/material';
+import { Grid, Fab } from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 function RefreshableGrid() {
     const [gridData, setGridData] = useState([]);
+    const [isVisible, setIsVisible] = useState(false);
 
     const fetchGridData = async () => {
         // 여기에서 API를 호출하거나 데이터를 불러옵니다.
@@ -12,6 +14,14 @@ function RefreshableGrid() {
 
     useEffect(() => {
         fetchGridData(); // 컴포넌트가 처음 마운트될 때 데이터 로드
+
+        // 스크롤 이벤트 리스너 추가
+        const handleScroll = () => {
+            setIsVisible(window.scrollY > 300); // 스크롤이 300px 이상일 때만 버튼 표시
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const handleRefresh = () => {
@@ -20,9 +30,6 @@ function RefreshableGrid() {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleRefresh}>
-                Refresh Grid
-            </Button>
             <Grid container spacing={2}>
                 {gridData.map((item, index) => (
                     <Grid item xs={4} key={index}>
@@ -30,6 +37,21 @@ function RefreshableGrid() {
                     </Grid>
                 ))}
             </Grid>
+
+            {isVisible && (
+                <Fab
+                    color="secondary"
+                    onClick={handleRefresh}
+                    sx={{
+                        position: 'fixed',
+                        bottom: 16,
+                        right: 16,
+                        zIndex: 1000
+                    }}
+                >
+                    <RefreshIcon />
+                </Fab>
+            )}
         </div>
     );
 }
