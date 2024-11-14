@@ -124,6 +124,8 @@ const VirtualTradeTable = ({ refreshKey }) => {
   const [virtualTrades, setVirtualTrades] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
+  const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
 
     useEffect(() => {
         fetchTodayTrades();
@@ -168,6 +170,13 @@ const VirtualTradeTable = ({ refreshKey }) => {
     }
   };
 
+  const handleSortOrderChange = (e) => {
+      setSortOrder(e.target.value);
+  };
+
+  const handleResultFilterChange = (e) => {
+      setResultFilter(e.target.value);
+  };
     const filteredTrades = virtualTrades
         .filter(trade => {
             const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
