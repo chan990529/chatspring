@@ -35,7 +35,7 @@ const ScrollToTop = ({ scrollRef }) => {
                 onClick={scrollToTop}
                 sx={{
                     position: 'fixed',
-                    bottom: 16,
+                    bottom: 50,
                     right: 16,
                     zIndex: 1000
                 }}

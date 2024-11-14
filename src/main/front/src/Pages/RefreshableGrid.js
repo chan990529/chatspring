@@ -4,7 +4,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 function RefreshableGrid() {
     const [gridData, setGridData] = useState([]);
-    const [isVisible, setIsVisible] = useState(false);
 
     const fetchGridData = async () => {
         // 여기에서 API를 호출하거나 데이터를 불러옵니다.
@@ -15,10 +14,6 @@ function RefreshableGrid() {
     useEffect(() => {
         fetchGridData(); // 컴포넌트가 처음 마운트될 때 데이터 로드
 
-        // 스크롤 이벤트 리스너 추가
-        const handleScroll = () => {
-            setIsVisible(window.scrollY > 300); // 스크롤이 300px 이상일 때만 버튼 표시
-        };
 
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
@@ -38,7 +33,7 @@ function RefreshableGrid() {
                 ))}
             </Grid>
 
-            {isVisible && (
+
                 <Fab
                     color="secondary"
                     onClick={handleRefresh}
@@ -51,7 +46,7 @@ function RefreshableGrid() {
                 >
                     <RefreshIcon />
                 </Fab>
-            )}
+            )
         </div>
     );
 }
