@@ -168,49 +168,63 @@ const VirtualTradeTable = ({ refreshKey }) => {
     }
   };
 
-  const filteredTrades = virtualTrades.filter(trade => {
-    const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
+    const filteredTrades = virtualTrades
+        .filter(trade => {
+            const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
 
-    if (isSearching) {
-      // 검색 중일 때는 모든 날짜의 데이터 표시
-      return matchesSearch;
-    } else {
-      // 검색 중이 아닐 때는 오늘 날짜 데이터만 표시
-      const today = new Date();
-      const tradeDate = new Date(trade.buyTime);
-      const isSameDay =
-        today.getFullYear() === tradeDate.getFullYear() &&
-        today.getMonth() === tradeDate.getMonth() &&
-        today.getDate() === tradeDate.getDate();
+            const matchesResult =
+                resultFilter === 'all' ||
+                (resultFilter === '승리' && trade.tradeResult === '승리') ||
+                (resultFilter === '패배' && trade.tradeResult === '패배') ||
+                (resultFilter === 'none' && !trade.tradeResult); // 결과가 없는 경우
 
-      return isSameDay && matchesSearch;
-    }
-  });
+            return matchesSearch && matchesResult;
+        })
+        .sort((a, b) =>
+            sortOrder === 'asc'
+                ? new Date(a.buyTime) - new Date(b.buyTime)  // 정순 정렬
+                : new Date(b.buyTime) - new Date(a.buyTime)  // 역순 정렬
+        );
 
-  return (
-    <div>
-      <TextField
-        label="종목명 검색"
-        variant="outlined"
-        fullWidth
-        margin="normal"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            handleSearch();
-          }
-        }}
-      />
-      {filteredTrades.length > 0 ? (
-        filteredTrades.map((trade) => (
-          <VirtualTradeCard key={trade.tradeId} trade={trade} />
-        ))
-      ) : (
-        <Typography>해당 종목이 없습니다.</Typography>
-      )}
-    </div>
-  );
+    return (
+        <div>
+            <RadioGroup row value={sortOrder} onChange={handleSortOrderChange}>
+                <FormControlLabel value="asc" control={<Radio />} label="시간 정순" />
+                <FormControlLabel value="desc" control={<Radio />} label="시간 역순" />
+            </RadioGroup>
+
+            <FormControl fullWidth margin="normal">
+                <InputLabel>매매 결과 필터</InputLabel>
+                <Select
+                    value={resultFilter}
+                    onChange={handleResultFilterChange}
+                    label="매매 결과 필터"
+                >
+                    <MenuItem value="all">전체</MenuItem>
+                    <MenuItem value="승리">승리</MenuItem>
+                    <MenuItem value="패배">패배</MenuItem>
+                    <MenuItem value="none">결과 없음</MenuItem>
+                </Select>
+            </FormControl>
+
+            <TextField
+                label="종목명 검색"
+                variant="outlined"
+                fullWidth
+                margin="normal"
+                value={searchQuery}
+                onChange={handleSearchChange}
+            />
+
+            {filteredTrades.length > 0 ? (
+                filteredTrades.map((trade) => (
+                    <VirtualTradeCard key={trade.tradeId} trade={trade} />
+                ))
+            ) : (
+                <Typography>해당 종목이 없습니다.</Typography>
+            )}
+        </div>
+    );
 };
 
 const MonitoringAndTrades = () => {
