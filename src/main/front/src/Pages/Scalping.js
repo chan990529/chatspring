@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { TextField, Typography, RadioGroup, FormControlLabel, Radio, Card, Select, MenuItem, FormControl, InputLabel, CardContent, Avatar, useMediaQuery, Box, Grid} from '@mui/material';
+import { DateTime } from 'luxon';
 import CloseImage from './Close.png';
 import OpenImage from './Open.png';
 import EmptyImage from './Empty.png';
@@ -135,7 +136,7 @@ const VirtualTradeTable = ({ refreshKey }) => {
     }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
 
     const fetchTodayTrades = () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = DateTime.now().setZone('Asia/Seoul').toISODate();
         axios.get(`/api/trades?date=${today}`)
             .then(response => {
                 setVirtualTrades(response.data);
