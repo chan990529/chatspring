@@ -130,14 +130,27 @@ const VirtualTradeTable = ({ refreshKey }) => {
     const [isSearching, setIsSearching] = useState(false);
     const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
     const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
+    const [authKey, setAuthKey] = useState(''); // 사용자 입력 키
+    const [isAuthorized, setIsAuthorized] = useState(false); // 권한 부여 여부
+
 
     useEffect(() => {
+        // 로컬 스토리지에서 권한 확인
+        const savedAuth = localStorage.getItem('user_auth');
+        if (savedAuth) {
+            const parsedAuth = JSON.parse(savedAuth);
+            if (new Date(parsedAuth.expiry) > new Date()) {
+                setIsAuthorized(true);
+            } else {
+                localStorage.removeItem('user_auth'); // 만료된 권한 삭제
+            }
+        }
         fetchTodayTrades();
     }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
 
     const fetchTodayTrades = () => {
         const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-        axios.get(`/api/trades?date=${today}`)
+        axios.get(`/api/trades?date=2024-11-12`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(false);
@@ -168,10 +181,18 @@ const VirtualTradeTable = ({ refreshKey }) => {
         const newQuery = e.target.value;
         setSearchQuery(newQuery);
 
+        if (newQuery === '나는천재치맨') {
+            const expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + 1); // 한 달 후 만료
+            localStorage.setItem('user_auth', JSON.stringify({ expiry: expiryDate }));
+            setIsAuthorized(true);
+            alert('권한이 부여되었습니다.');
+        }
         // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
-        if (newQuery === '') {
+        else if (newQuery === '') {
             fetchTodayTrades();
         }
+
     };
 
     const handleSortOrderChange = (e) => {
@@ -254,7 +275,9 @@ const MonitoringAndTrades = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
 
+
     const [refreshKey, setRefreshKey] = useState(0); // 새로고침을 위한 키 값
+
     const refreshTrades = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
