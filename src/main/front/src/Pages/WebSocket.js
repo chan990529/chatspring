@@ -19,7 +19,7 @@ const TradeNotification = () => {
             Notification.requestPermission();
         }
 
-        const socketUrl = 'http://13.209.60.49:8080/ws';  // 실제 서버 주소로 변경
+        const socketUrl = 'https://scalping.app/ws';  // 실제 서버 주소로 변경
         const socket = () => new SockJS(socketUrl);
         const stompClient = Stomp.over(socket);
 
