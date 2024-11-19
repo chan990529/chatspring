@@ -150,7 +150,7 @@ const VirtualTradeTable = ({ refreshKey }) => {
 
     const fetchTodayTrades = () => {
         const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-        axios.get(`/api/trades?date=2024-11-12`)
+        axios.get(`/api/trades?date=${today}`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(false);
