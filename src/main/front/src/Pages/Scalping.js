@@ -67,9 +67,14 @@ const VirtualTradeCard = ({ trade }) => {
     } else if (trade.tradeResult === "패배") {
         tradeResultImage = EmptyImage;
     }
+
     const formatNumber = (value) => {
         return new Intl.NumberFormat('ko-KR').format(value);
     };
+
+    // 매수일 시간 비교
+    const buyTimeDate = new Date(trade.buyTime);
+    const isBefore920 = buyTimeDate.getHours() < 9 || (buyTimeDate.getHours() === 9 && buyTimeDate.getMinutes() < 20);
 
     return (
         <Card
@@ -108,7 +113,13 @@ const VirtualTradeCard = ({ trade }) => {
 
                 {/* 나머지 정보 표시 */}
                 <Typography><strong>평단가:</strong> {formatNumber(trade.buyPrice)}</Typography>
-                <Typography><strong>매수일:</strong> {new Date(trade.buyTime).toLocaleString('ko-KR')}</Typography>
+                <Typography
+                    sx={{
+                        color: isBefore920 ? '#7b00ff' : 'inherit' // 9시 20분 이전인 경우 글씨 색 노란색으로 변경
+                    }}
+                >
+                    <strong>매수일:</strong> {buyTimeDate.toLocaleString('ko-KR')}
+                </Typography>
                 <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
                 <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
                 <Typography><strong>손절가:</strong> {formatNumber(trade.stopLossPrice)}</Typography>
