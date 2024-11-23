@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
     typography: {
-        fontFamily: '"GmarketSansTTFMedium", "Roboto", "Helvetica", "Arial", sans-serif',
+        fontFamily: '"Pretendard", "Roboto", "Helvetica", "Arial", sans-serif',
     },
 });
 

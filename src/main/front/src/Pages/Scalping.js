@@ -81,10 +81,13 @@ const VirtualTradeCard = ({ trade }) => {
             sx={{
                 marginBottom: 2,
                 backgroundColor:
-                    trade.tradeResult === "승리" ? '#54ED7F' :
-                        trade.tradeResult === "패배" ? '#DB4455' :
-                            trade.tradeResult === "" ? '#B0B0B0' : 'default',
-                position: 'relative'
+                    trade.tradeResult === "승리" ? '#3DFF92' :
+                        trade.tradeResult === "패배" ? '#FF5675' :
+                            trade.tradeResult === "" ? '#f8f9fa' : 'default',
+                position: 'relative',
+                borderRadius: '12px',
+                boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                margin: '10px 0'
             }}
         >
             <CardContent>
