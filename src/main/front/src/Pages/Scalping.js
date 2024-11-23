@@ -101,7 +101,7 @@ const VirtualTradeCard = ({ trade }) => {
                             flex: 1
                         }}
                     >
-                        <strong>종목명:</strong> {trade.stockName}
+                        <strong>{trade.stockName}</strong>
                     </Typography>
                     <Avatar
                         src={tradeResultImage}
@@ -226,22 +226,19 @@ const VirtualTradeTable = ({ refreshKey }) => {
                 resultFilter === 'all' ||
                 (resultFilter === '승리' && trade.tradeResult === '승리') ||
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
-                (resultFilter === 'none' && !trade.tradeResult); // 결과가 없는 경우
+                (resultFilter === 'none' && !trade.tradeResult);
 
-            // 검색어가 비어 있지 않으면 모든 날짜의 데이터를 표시하고, 비어 있을 때는 오늘 날짜 데이터만 표시
-            const today = new Date();
-            const tradeDate = new Date(trade.buyTime);
-            const isSameDay =
-                today.getFullYear() === tradeDate.getFullYear() &&
-                today.getMonth() === tradeDate.getMonth() &&
-                today.getDate() === tradeDate.getDate();
+            // Luxon을 사용하여 시간 비교
+            const today = DateTime.now().setZone('Asia/Seoul').startOf('day');
+            const tradeDate = DateTime.fromISO(trade.buyTime).setZone('Asia/Seoul').startOf('day');
+            const isSameDay = today.hasSame(tradeDate, 'day');
 
             return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
         })
         .sort((a, b) =>
             sortOrder === 'asc'
-                ? new Date(a.buyTime) - new Date(b.buyTime)  // 정순 정렬
-                : new Date(b.buyTime) - new Date(a.buyTime)  // 역순 정렬
+                ? DateTime.fromISO(a.buyTime).toMillis() - DateTime.fromISO(b.buyTime).toMillis()
+                : DateTime.fromISO(b.buyTime).toMillis() - DateTime.fromISO(a.buyTime).toMillis()
         );
 
     return (
