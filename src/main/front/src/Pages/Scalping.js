@@ -28,7 +28,7 @@ import EmptyImage from './Empty.png';
 import './Scalping.css';  // CSS 파일을 따로 관리
 import ScrollToTop from './ScrollToTop';
 import RefreshableGrid from "./RefreshableGrid";
-
+import { Popover } from '@mui/material';
 
 axios.defaults.baseURL = 'https://scalping.app';
 
