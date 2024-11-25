@@ -25,8 +25,8 @@ import {
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DateTime } from 'luxon';
-import CloseImage from './close.png';
-import OpenImage from './open.png';
+import CloseImage from './Close.png';
+import OpenImage from './Open.png';
 import EmptyImage from './Empty.png';
 import './Scalping.css';  // CSS 파일을 따로 관리
 import ScrollToTop from './ScrollToTop';
