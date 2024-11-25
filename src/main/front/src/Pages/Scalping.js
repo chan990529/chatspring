@@ -411,6 +411,9 @@ const MonitoringAndTrades = () => {
                     direction={isMobile ? 'column' : 'row'}
                     justifyContent="center"
                 >
+                    <Grid item xs={12} md={6}>
+                        <ScriptStatus />
+                    </Grid>
                     <Grid
                         item
                         xs={12}
