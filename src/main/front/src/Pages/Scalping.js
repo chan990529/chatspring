@@ -26,6 +26,7 @@ import {
     AppBar,
     Toolbar
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DateTime } from 'luxon';
 import CloseImage from './Close.png';
