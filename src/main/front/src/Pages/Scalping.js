@@ -21,7 +21,10 @@ import {
     DialogTitle,
     DialogContent,
     Checkbox,
-    Button
+    Button,
+    DialogActions,
+    AppBar,
+    Toolbar
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DateTime } from 'luxon';
@@ -287,6 +290,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     );
 };
 
+
 const MonitoringAndTrades = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
@@ -312,6 +316,85 @@ const MonitoringAndTrades = () => {
         setSelectedTradeIds([]);
     };
 
+    const handleCheckboxChange = (event) => {
+        const { name, checked } = event.target;
+        setSelectedFields((prev) => {
+            const updatedFields = {
+                ...prev,
+                [name]: checked,
+            };
+            localStorage.setItem('selectedFields', JSON.stringify(updatedFields));
+            return updatedFields;
+        });
+    };
+
+    const DialogComponent = () => (
+        <Dialog
+            fullScreen={isMobile}
+            open={openConfig}
+            onClose={handleCloseConfig}
+            sx={{
+                '& .MuiDialog-paper': {
+                    margin: isMobile ? 0 : 2,
+                    width: isMobile ? '100%' : 'auto',
+                    maxHeight: isMobile ? '100%' : 'calc(100% - 64px)',
+                    borderRadius: isMobile ? 0 : 2
+                }
+            }}
+        >
+            {isMobile ? (
+                <AppBar sx={{ position: 'relative' }}>
+                    <Toolbar>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            onClick={handleCloseConfig}
+                            aria-label="close"
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
+                            표시할 항목 선택
+                        </Typography>
+                        <Button autoFocus color="inherit" onClick={handleClearSelection}>
+                            초기화
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+            ) : (
+                <DialogTitle>표시할 항목 선택</DialogTitle>
+            )}
+            <DialogContent>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    pt: isMobile ? 2 : 0
+                }}>
+                    {Object.keys(selectedFields).map((field) => (
+                        <FormControlLabel
+                            key={field}
+                            control={
+                                <Checkbox
+                                    checked={selectedFields[field]}
+                                    onChange={handleCheckboxChange}
+                                    name={field}
+                                />
+                            }
+                            label={field}
+                        />
+                    ))}
+                </Box>
+            </DialogContent>
+            {!isMobile && (
+                <DialogActions>
+                    <Button onClick={handleClearSelection}>초기화</Button>
+                    <Button onClick={handleCloseConfig}>확인</Button>
+                </DialogActions>
+            )}
+        </Dialog>
+    );
+
     return (
         <Box
             component="div"
@@ -331,7 +414,7 @@ const MonitoringAndTrades = () => {
                     padding: 2,
                     position: 'relative',
                     overflowY: 'auto',
-                    WebkitOverflowScrolling: 'touch', // iOS 스크롤 성능 개선
+                    WebkitOverflowScrolling: 'touch',
                 }}
             >
                 <Grid
@@ -361,9 +444,7 @@ const MonitoringAndTrades = () => {
             </Box>
             <ScrollToTop scrollRef={containerRef} />
             <RefreshableGrid onRefresh={refreshTrades} />
-            <Dialog open={openConfig} onClose={handleCloseConfig}>
-                {/* Dialog content remains the same */}
-            </Dialog>
+            <DialogComponent />
         </Box>
     );
 };
