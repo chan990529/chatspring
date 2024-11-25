@@ -17,16 +17,9 @@ import {
     Box,
     Grid,
     IconButton,
-    Dialog,
-    DialogTitle,
-    DialogContent,
     Checkbox,
     Button,
-    DialogActions,
-    AppBar,
-    Toolbar
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { DateTime } from 'luxon';
 import CloseImage from './Close.png';
@@ -311,8 +304,8 @@ const MonitoringAndTrades = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
 
-    const handleOpenConfig = () => setOpenConfig(true);
-    const handleCloseConfig = () => setOpenConfig(false);
+    // const handleOpenConfig = () => setOpenConfig(true);
+    // const handleCloseConfig = () => setOpenConfig(false);
     const handleClearSelection = () => {
         setSelectedTradeIds([]);
     };
@@ -329,71 +322,67 @@ const MonitoringAndTrades = () => {
         });
     };
 
-    const DialogComponent = () => (
-        <Dialog
-            fullScreen={isMobile}
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleOpenConfig = (event) => {
+        setAnchorEl(event.currentTarget);
+        setOpenConfig(true);
+    };
+
+    const handleCloseConfig = () => {
+        setAnchorEl(null);
+        setOpenConfig(false);
+    };
+
+    const PopoverComponent = () => (
+        <Popover
             open={openConfig}
+            anchorEl={anchorEl}
             onClose={handleCloseConfig}
-            sx={{
-                '& .MuiDialog-paper': {
-                    margin: isMobile ? 0 : 2,
-                    width: isMobile ? '100%' : 'auto',
-                    maxHeight: isMobile ? '100%' : 'calc(100% - 64px)',
-                    borderRadius: isMobile ? 0 : 2
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
+            PaperProps={{
+                sx: {
+                    p: 2,
+                    width: 280,
+                    borderRadius: 2
                 }
             }}
         >
-            {isMobile ? (
-                <AppBar sx={{ position: 'relative' }}>
-                    <Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleCloseConfig}
-                            aria-label="close"
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography sx={{ ml: 2, flex: 1 }} variant="h6">
-                            표시할 항목 선택
-                        </Typography>
-                        <Button autoFocus color="inherit" onClick={handleClearSelection}>
-                            초기화
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-            ) : (
-                <DialogTitle>표시할 항목 선택</DialogTitle>
-            )}
-            <DialogContent>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    pt: isMobile ? 2 : 0
-                }}>
-                    {Object.keys(selectedFields).map((field) => (
-                        <FormControlLabel
-                            key={field}
-                            control={
-                                <Checkbox
-                                    checked={selectedFields[field]}
-                                    onChange={handleCheckboxChange}
-                                    name={field}
-                                />
-                            }
-                            label={field}
-                        />
-                    ))}
-                </Box>
-            </DialogContent>
-            {!isMobile && (
-                <DialogActions>
-                    <Button onClick={handleClearSelection}>초기화</Button>
-                    <Button onClick={handleCloseConfig}>확인</Button>
-                </DialogActions>
-            )}
-        </Dialog>
+            <Box sx={{ mb: 2 }}>
+                <Typography variant="h6">표시할 항목 선택</Typography>
+            </Box>
+            <Box sx={{ mb: 2 }}>
+                {Object.keys(selectedFields).map((field) => (
+                    <FormControlLabel
+                        key={field}
+                        control={
+                            <Checkbox
+                                checked={selectedFields[field]}
+                                onChange={handleCheckboxChange}
+                                name={field}
+                            />
+                        }
+                        label={field}
+                        sx={{ display: 'block', mb: 1 }}
+                    />
+                ))}
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button fullWidth variant="outlined" onClick={() => {handleClearSelection(); handleCloseConfig();}}>
+                    초기화
+                </Button>
+                <Button fullWidth variant="contained" onClick={handleCloseConfig}>
+                    확인
+                </Button>
+            </Box>
+        </Popover>
     );
 
     return (
@@ -415,6 +404,7 @@ const MonitoringAndTrades = () => {
                     position: 'relative',
                 }}
             >
+                <PopoverComponent />
                 <Grid
                     container
                     spacing={2}
@@ -442,7 +432,6 @@ const MonitoringAndTrades = () => {
             </Box>
             <ScrollToTop scrollRef={containerRef} />
             <RefreshableGrid onRefresh={refreshTrades} />
-            <DialogComponent />
         </Box>
     );
 };
