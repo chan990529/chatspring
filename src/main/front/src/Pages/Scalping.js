@@ -110,7 +110,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                                 ? '#f8f9fa'
                                 : 'default',
                 borderRadius: '12px',
-                boxShadow: isSelected ? '0px 0px 15px 5px rgba(0, 123, 255, 0.5)' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                boxShadow: isSelected ? 'rgba(3, 102, 214, 0.3) 0px 0px 0px 3px' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
                 margin: '10px 0',
                 cursor: 'pointer'
             }}
