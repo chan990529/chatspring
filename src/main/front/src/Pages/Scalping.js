@@ -400,12 +400,10 @@ const MonitoringAndTrades = () => {
         <Box
             component="div"
             sx={{
-                minHeight: '100vh',
-                height: 'auto',
-                position: 'relative',
+                height: '100vh',
+                overflow: 'hidden', // 변경
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: isMobile ? 'visible' : 'auto',
             }}
         >
             <Box
@@ -413,9 +411,8 @@ const MonitoringAndTrades = () => {
                 sx={{
                     flex: 1,
                     padding: 2,
-                    position: 'relative',
                     overflowY: 'auto',
-                    WebkitOverflowScrolling: 'touch',
+                    position: 'relative',
                 }}
             >
                 <Grid
