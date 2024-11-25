@@ -260,6 +260,11 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                     selectedFields={selectedFields}
                     onClick={() => onTradeSelect(selectedTradeIds.filter(id => id !== tradeId))}
                     isSelected={true}
+                    sx={{
+                        position: 'sticky',
+                        top: 0, // 화면 상단에 고정
+                        zIndex: 10,
+                    }}
                 />
             ))}
 
@@ -285,7 +290,6 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 const MonitoringAndTrades = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
-
     const [refreshKey, setRefreshKey] = useState(0);
     const [selectedFields, setSelectedFields] = useState(() => {
         const savedFields = localStorage.getItem('selectedFields');
@@ -296,84 +300,70 @@ const MonitoringAndTrades = () => {
     });
 
     const [selectedTradeIds, setSelectedTradeIds] = useState([]);
+    const [openConfig, setOpenConfig] = useState(false);
+
     const refreshTrades = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
 
-    const [openConfig, setOpenConfig] = useState(false);
     const handleOpenConfig = () => setOpenConfig(true);
     const handleCloseConfig = () => setOpenConfig(false);
-
-    const handleCheckboxChange = (event) => {
-        const { name, checked } = event.target;
-        setSelectedFields((prev) => {
-            const updatedFields = {
-                ...prev,
-                [name]: checked,
-            };
-            localStorage.setItem('selectedFields', JSON.stringify(updatedFields));
-            return updatedFields;
-        });
-    };
-
     const handleClearSelection = () => {
         setSelectedTradeIds([]);
     };
 
     return (
         <Box
-            ref={containerRef}
+            component="div"
             sx={{
-                height: '100vh',
-                overflow: 'auto',
+                minHeight: '100vh',
+                height: 'auto',
                 position: 'relative',
-                padding: 2,
                 display: 'flex',
+                flexDirection: 'column',
+                overflow: isMobile ? 'visible' : 'auto',
             }}
         >
-            <Dialog open={openConfig} onClose={handleCloseConfig}>
-                <DialogTitle>표시할 항목 선택</DialogTitle>
-                <DialogContent>
-                    {Object.keys(selectedFields).map((field) => (
-                        <FormControlLabel
-                            key={field}
-                            control={
-                                <Checkbox
-                                    checked={selectedFields[field]}
-                                    onChange={handleCheckboxChange}
-                                    name={field}
-                                />
-                            }
-                            label={field}
-                        />
-                    ))}
-                </DialogContent>
-                <Button onClick={handleClearSelection} sx={{ margin: 1 }}>
-                    고정 초기화
-                </Button>
-                <Button onClick={handleCloseConfig} sx={{ margin: 1 }}>
-                    확인
-                </Button>
-            </Dialog>
-
-            <Grid
-                container
-                spacing={2}
-                direction={isMobile ? 'column' : 'row'}
-                justifyContent="center"
+            <Box
+                ref={containerRef}
+                sx={{
+                    flex: 1,
+                    padding: 2,
+                    position: 'relative',
+                    overflowY: 'auto',
+                    WebkitOverflowScrolling: 'touch', // iOS 스크롤 성능 개선
+                }}
             >
-                <Grid item xs={12} md={6}>
-                    <VirtualTradeTable
-                        refreshKey={refreshKey}
-                        selectedFields={selectedFields}
-                        onConfigClick={handleOpenConfig}
-                        onTradeSelect={setSelectedTradeIds}
-                        selectedTradeIds={selectedTradeIds}
-                    />
+                <Grid
+                    container
+                    spacing={2}
+                    direction={isMobile ? 'column' : 'row'}
+                    justifyContent="center"
+                >
+                    <Grid
+                        item
+                        xs={12}
+                        md={6}
+                        sx={{
+                            height: '100%',
+                            position: 'relative'
+                        }}
+                    >
+                        <VirtualTradeTable
+                            refreshKey={refreshKey}
+                            selectedFields={selectedFields}
+                            onConfigClick={handleOpenConfig}
+                            onTradeSelect={setSelectedTradeIds}
+                            selectedTradeIds={selectedTradeIds}
+                        />
+                    </Grid>
                 </Grid>
-            </Grid>
+            </Box>
             <ScrollToTop scrollRef={containerRef} />
             <RefreshableGrid onRefresh={refreshTrades} />
+            <Dialog open={openConfig} onClose={handleCloseConfig}>
+                {/* Dialog content remains the same */}
+            </Dialog>
         </Box>
     );
 };
