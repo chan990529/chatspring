@@ -93,6 +93,18 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
     };
 
     const buyTimeDate = new Date(trade.buyTime);
+    const isBefore920 = buyTimeDate.getHours() < 9 || (buyTimeDate.getHours() === 9 && buyTimeDate.getMinutes() < 20);
+
+    const getMarketTypeLabel = (marketType) => {
+        switch (marketType) {
+            case "KOSPI":
+                return "코스피";
+            case "KOSDAQ":
+                return "코스닥";
+            default:
+                return marketType;
+        }
+    };
 
     return (
         <Card
@@ -109,13 +121,14 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                 borderRadius: '12px',
                 boxShadow: isSelected ? 'rgba(3, 102, 214, 0.3) 0px 0px 0px 3px' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
                 margin: '10px 0',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                position: 'relative', // 추가
             }}
             onClick={onClick}
         >
             <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2, gap: 2 }}>
-                    <Typography variant="h6" sx={{ flex: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2, gap: 2}}>
+                    <Typography variant="h6" sx={{ flex: 1 ,fontWeight: 'bold' }}>
                         <strong>{trade.stockName}</strong>
                     </Typography>
                     <Avatar
@@ -128,9 +141,26 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                         }}
                     />
                 </Box>
-
+                <Typography
+                    sx={{
+                        fontSize: '0.9rem',
+                        fontWeight: 'bold',
+                        color: '#000', // 글자색을 검은색으로 설정
+                        border: '2px solid #FFD700', // 노란색 테두리
+                        borderRadius: '4px', // 모서리를 둥글게 처리
+                        padding: '2px 8px', // 내부 여백
+                        display: 'inline-block', // 글씨만큼만 크기를 설정
+                        backgroundColor : '#FFD700',
+                    }}
+                >
+                    {getMarketTypeLabel(trade.marketType)}
+                </Typography>
                 <Typography><strong>평단가:</strong> {formatNumber(trade.buyPrice)}</Typography>
-                <Typography>
+                <Typography
+                    sx={{
+                        color: isBefore920 ? '#7b00ff' : 'inherit' // 9시 20분 이전인 경우 글씨 색 노란색으로 변경
+                    }}
+                >
                     <strong>매수일:</strong> {buyTimeDate.toLocaleString('ko-KR')}
                 </Typography>
                 <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
@@ -151,6 +181,9 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                 {selectedFields['3% 매매내역'] && (
                     <Typography><strong>3% 경과시간:</strong> {trade.reachTime3}</Typography>
                 )}
+
+                {/* 우측 하단 marketType 표시 */}
+
             </CardContent>
         </Card>
     );

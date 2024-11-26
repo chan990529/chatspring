@@ -57,6 +57,9 @@ public class VirtualTrade {
     @Column(name = "condition_type")
     private String conditionType;
 
+    @Column(name = "market_type")
+    private String marketType;
+
 //    @Column(name = "code")
 //    private String Code;
 //
@@ -191,6 +194,14 @@ public class VirtualTrade {
 
     public void setconditionType(String conditionType) {
         this.conditionType = conditionType;
+    }
+
+    public String getmarketType() {
+        return marketType;
+    }
+
+    public void setmarketType(String marketType) {
+        this.marketType = marketType;
     }
 
 }
