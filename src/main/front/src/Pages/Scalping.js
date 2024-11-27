@@ -164,7 +164,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                     <strong>매수일:</strong> {buyTimeDate.toLocaleString('ko-KR')}
                 </Typography>
                 <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
-                <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
+                {/*<Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>*/}
                 <Typography><strong>손절가:</strong> {formatNumber(trade.stopLossPrice)}</Typography>
                 <Typography><strong>조건식:</strong> {trade.conditionType}</Typography>
                 <Typography><strong>1% 매도가:</strong> {trade.sellPrice1 ? formatNumber(trade.sellPrice1) : 'N/A'}</Typography>
