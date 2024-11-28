@@ -5,6 +5,7 @@ import Layout from './Component/Layout'; // Layout을 import
 import ScalpingPage from './Pages/Scalping';
 import StatisticsPage from './Pages/Statistics';
 import TradeNotification from "./Pages/WebSocket"; // TradeNotification을 import
+import StatusPage from "./Pages/Status";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <Route index element={<ScalpingPage />} />
                     <Route path="Scalping" element={<ScalpingPage />} />
                     <Route path="Statistics" element={<StatisticsPage />} />
+                    <Route path="Status" element={<StatusPage />}/>
                 </Route>
             </Routes>
         </Router>
