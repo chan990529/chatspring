@@ -37,12 +37,12 @@ const ScriptStatus = () => {
         <Card sx={{ marginBottom: 2 }}>
             <CardContent>
                 <Typography variant="h5">연구소 통신상태</Typography>
-                {/*<Typography><strong>상태:</strong> {status.status}</Typography>*/}
-                {/*<Typography><strong>최종 업데이트:</strong> {status.lastUpdateTime}</Typography>*/}
-                {/*<Typography><strong>내용:</strong> {status.details}</Typography>*/}
-                {/*{status.error && (*/}
-                {/*    <Typography color="error"><strong>Error:</strong> {status.error}</Typography>*/}
-                {/*)}*/}
+                <Typography><strong>상태:</strong> {status.status}</Typography>
+                <Typography><strong>최종 업데이트:</strong> {status.lastUpdateTime}</Typography>
+                <Typography><strong>내용:</strong> {status.details}</Typography>
+                {status.error && (
+                    <Typography color="error"><strong>Error:</strong> {status.error}</Typography>
+                )}
             </CardContent>
         </Card>
     );
