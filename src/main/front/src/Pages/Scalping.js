@@ -38,6 +38,7 @@ const TitleText = () => {
     return (
         <Card sx={{ marginBottom: 2 }}>
             <CardContent>
+                <Typography variant="h5">喝!!!!!!!!!!!!</Typography>
                 <Typography variant="h5">다산 파이버는 당장 1% 수익대까지 회복하라!!!!</Typography>
             </CardContent>
         </Card>
