@@ -116,13 +116,13 @@ const TradeStatistics = () => {
                   <span className="font-bold">평균 도달시간 :</span> {statistics.avg_reach_time}
                 </p>
                 <p>
-                  <span className="font-bold">코스피 승률 :</span> {statistics.win_ratio_kospi}
+                  <span className="font-bold">코스피 승률 :</span> {statistics.win_ratio_kospi}%
                 </p>
                 <p>
-                  <span className="font-bold">코스닥 승률 :</span> {statistics.win_ratio_kosdaq}
+                  <span className="font-bold">코스닥 승률 :</span> {statistics.win_ratio_kosdaq}%
                 </p>
                 <p>
-                  <span className="font-bold">풀빠다 승률 :</span> {statistics.ratio_max_buy}
+                  <span className="font-bold">풀빠다 승률 :</span> {statistics.ratio_max_buy}%
                 </p>
               </div>
           )}
