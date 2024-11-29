@@ -15,7 +15,7 @@ const TradeStatistics = () => {
     total_wins: 0,
     avg_reach_time: 'N/A',
     win_ratio_kospi : 0,
-    win_ratio_kodsaq : 0,
+    win_ratio_kosdaq : 0,
     ratio_max_buy : 0
   });
   const [error, setError] = useState(null);
@@ -119,7 +119,7 @@ const TradeStatistics = () => {
                   <span className="font-bold">코스피 승률 :</span> {statistics.win_ratio_kospi}
                 </p>
                 <p>
-                  <span className="font-bold">코스닥 승률 :</span> {statistics.win_ratio_kodsaq}
+                  <span className="font-bold">코스닥 승률 :</span> {statistics.win_ratio_kosdaq}
                 </p>
                 <p>
                   <span className="font-bold">풀빠다 승률 :</span> {statistics.ratio_max_buy}
