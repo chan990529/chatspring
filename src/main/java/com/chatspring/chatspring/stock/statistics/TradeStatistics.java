@@ -3,7 +3,6 @@ package com.chatspring.chatspring.stock.statistics;
 import jakarta.persistence.*;
 import org.springframework.data.relational.core.sql.In;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -37,13 +36,13 @@ public class TradeStatistics {
     private String avgReachTime;
 
     @Column(name = "win_ratio_kospi")
-    private BigDecimal winRatioKospi;
+    private Float winRatioKospi;
 
     @Column(name = "win_ratio_kosdaq")
-    private BigDecimal winRatioKosdaq;
+    private Float winRatioKosdaq;
 
     @Column(name = "ratio_max_buy")
-    private BigDecimal ratioMaxBuy;
+    private Float ratioMaxBuy;
 
     // Getters and Setters
     public Long getId() {
@@ -109,27 +108,27 @@ public class TradeStatistics {
         this.avgReachTime = avgReachTime;
     }
 
-    public BigDecimal getWinRatioKospi() {
+    public Float getWinRatioKospi() {
         return winRatioKospi;
     }
 
-    public void setWinRatioKospi(BigDecimal winRatioKospi) {
+    public void setWinRatioKospi(Float winRatioKospi) {
         this.winRatioKospi = winRatioKospi;
     }
 
-    public BigDecimal getWinRatioKosdaq() {
+    public Float getWinRatioKosdaq() {
         return winRatioKosdaq;
     }
 
-    public void setWinRatioKosdaq(BigDecimal winRatioKosdaq) {
+    public void setWinRatioKosdaq(Float winRatioKosdaq) {
         this.winRatioKosdaq = winRatioKosdaq;
     }
 
-    public BigDecimal getRatioMaxBuy() {
+    public Float getRatioMaxBuy() {
         return ratioMaxBuy;
     }
 
-    public void setRatioMaxBuy(BigDecimal ratioMaxBuy) {
+    public void setRatioMaxBuy(Float ratioMaxBuy) {
         this.ratioMaxBuy = ratioMaxBuy;
     }
 }
