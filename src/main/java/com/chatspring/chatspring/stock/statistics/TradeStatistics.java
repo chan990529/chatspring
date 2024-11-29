@@ -36,13 +36,13 @@ public class TradeStatistics {
     private String avgReachTime;
 
     @Column(name = "win_ratio_kospi")
-    private Float winRatioKospi;
+    private Double winRatioKospi;
 
     @Column(name = "win_ratio_kosdaq")
-    private Float winRatioKosdaq;
+    private Double winRatioKosdaq;
 
     @Column(name = "ratio_max_buy")
-    private Integer ratioMaxBuy;
+    private Double ratioMaxBuy;
 
     // Getters and Setters
     public Long getId() {
@@ -108,27 +108,27 @@ public class TradeStatistics {
         this.avgReachTime = avgReachTime;
     }
 
-    public Float getWinRatioKospi() {
+    public Double getWinRatioKospi() {
         return winRatioKospi;
     }
 
-    public void setWinRatioKospi(Float winRatioKospi) {
+    public void setWinRatioKospi(Double winRatioKospi) {
         this.winRatioKospi = winRatioKospi;
     }
 
-    public Float getWinRatioKosdaq() {
+    public Double getWinRatioKosdaq() {
         return winRatioKosdaq;
     }
 
-    public void setWinRatioKosdaq(Float winRatioKosdaq) {
+    public void setWinRatioKosdaq(Double winRatioKosdaq) {
         this.winRatioKosdaq = winRatioKosdaq;
     }
 
-    public Integer getRatioMaxBuy() {
+    public Double getRatioMaxBuy() {
         return ratioMaxBuy;
     }
 
-    public void setRatioMaxBuy(Integer ratioMaxBuy) {
+    public void setRatioMaxBuy(Double ratioMaxBuy) {
         this.ratioMaxBuy = ratioMaxBuy;
     }
 }
