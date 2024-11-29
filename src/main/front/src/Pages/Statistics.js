@@ -13,7 +13,10 @@ const TradeStatistics = () => {
     count_sell_price_3: 0,
     total_trades: 0,
     total_wins: 0,
-    avg_reach_time: 'N/A'
+    avg_reach_time: 'N/A',
+    win_ratio_kospi : 0,
+    win_ratio_kodsaq : 0,
+    ratio_max_buy : 0
   });
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -111,6 +114,15 @@ const TradeStatistics = () => {
                 </p>
                 <p>
                   <span className="font-bold">평균 도달시간 :</span> {statistics.avg_reach_time}
+                </p>
+                <p>
+                  <span className="font-bold">코스피 승률 :</span> {statistics.win_ratio_kospi}
+                </p>
+                <p>
+                  <span className="font-bold">코스닥 승률 :</span> {statistics.win_ratio_kodsaq}
+                </p>
+                <p>
+                  <span className="font-bold">풀빠다 승률 :</span> {statistics.ratio_max_buy}
                 </p>
               </div>
           )}

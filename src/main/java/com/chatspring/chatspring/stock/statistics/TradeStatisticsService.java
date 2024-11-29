@@ -25,6 +25,10 @@ public class TradeStatisticsService {
         tradeStatistics.setCountSellPrice2((Integer) statistics.get("count_sell_price_2"));
         tradeStatistics.setCountSellPrice3((Integer) statistics.get("count_sell_price_3"));
         tradeStatistics.setAvgReachTime((String) statistics.get("avg_reach_time"));
+        tradeStatistics.setWinRatioKospi((Integer) statistics.get("win_ratio_kospi"));
+        tradeStatistics.setWinRatioKosdaq((Integer) statistics.get("win_ratio_kosdaq"));
+        tradeStatistics.setRatioMaxBuy((Integer) statistics.get("ratio_max_buy"));
+
         tradeStatisticsRepository.save(tradeStatistics);
     }
 
@@ -42,6 +46,9 @@ public class TradeStatisticsService {
             statistics.put("count_sell_price_3", stats.getCountSellPrice3());
             statistics.put("total_wins", stats.getTotalWins());
             statistics.put("avg_reach_time", stats.getAvgReachTime());
+            statistics.put("win_ratio_kospi", stats.getWinRatioKospi());
+            statistics.put("win_ratio_kosdaq", stats.getWinRatioKosdaq());
+            statistics.put("ratio_max_buy", stats.getRatioMaxBuy());
 
             return statistics;
         } else {
@@ -62,7 +69,9 @@ public class TradeStatisticsService {
             statistics.put("count_sell_price_3", stats.getCountSellPrice3());
             statistics.put("total_wins", stats.getTotalWins());
             statistics.put("avg_reach_time", stats.getAvgReachTime());
-
+            statistics.put("win_ratio_kospi", stats.getWinRatioKospi());
+            statistics.put("win_ratio_kosdaq", stats.getWinRatioKosdaq());
+            statistics.put("ratio_max_buy", stats.getRatioMaxBuy());
             return statistics;
         } else {
             throw new RuntimeException("No statistics available for today.");
