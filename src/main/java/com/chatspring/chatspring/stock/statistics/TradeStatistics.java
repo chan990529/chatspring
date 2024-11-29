@@ -42,7 +42,7 @@ public class TradeStatistics {
     private Float winRatioKosdaq;
 
     @Column(name = "ratio_max_buy")
-    private Float ratioMaxBuy;
+    private Integer ratioMaxBuy;
 
     // Getters and Setters
     public Long getId() {
@@ -124,11 +124,11 @@ public class TradeStatistics {
         this.winRatioKosdaq = winRatioKosdaq;
     }
 
-    public Float getRatioMaxBuy() {
+    public Integer getRatioMaxBuy() {
         return ratioMaxBuy;
     }
 
-    public void setRatioMaxBuy(Float ratioMaxBuy) {
+    public void setRatioMaxBuy(Integer ratioMaxBuy) {
         this.ratioMaxBuy = ratioMaxBuy;
     }
 }
