@@ -319,7 +319,10 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 today.getMonth() === tradeDate.getMonth() &&
                 today.getDate() === tradeDate.getDate();
 
-            return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
+            return matchesSearch && matchesResult && (
+                searchQuery.trim() !== '' ||
+                (selectedFields['3일치 표시'] ? isRecentTrade(trade) : isSameDay)
+            );
         })
         .sort((a, b) =>
             sortOrder === 'asc'
