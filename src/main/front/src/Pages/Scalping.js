@@ -199,18 +199,49 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
     const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
 
+    // useEffect(() => {
+    //     fetchTodayTrades();
+    // }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
+    //
+    //
+    //
+    // useEffect(() => {
+    //     const todayTrades = virtualTrades.filter(isTodayTrade);
+    //     calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
+    // }, [virtualTrades]);
+
+    // const fetchTodayTrades = () => {
+    //     const today = DateTime.now().setZone('Asia/Seoul').toISODate();
+    //     axios.get(`/api/trades?date=${today}`)
+    //         .then(response => {
+    //             setVirtualTrades(response.data);
+    //             setIsSearching(false);
+    //         })
+    //         .catch(error => {
+    //             console.error('There was an error fetching the virtual trades!', error);
+    //         });
+    // };
     useEffect(() => {
-        fetchTodayTrades();
-    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
+        fetchTrades();
+    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTrades 호출
 
     useEffect(() => {
-        const todayTrades = virtualTrades.filter(isTodayTrade);
-        calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
+        const filteredTrades = virtualTrades.filter(isRecentTrade);
+        calculateTradeStats(filteredTrades); // 최근 날짜 데이터만 사용하여 비율 계산
     }, [virtualTrades]);
 
-    const fetchTodayTrades = () => {
-        const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-        axios.get(`/api/trades?date=${today}`)
+    const fetchTrades = () => {
+        const endDate = DateTime.now().setZone('Asia/Seoul').toISODate();
+        let startDate;
+
+        if (selectedFields['3일치 표시']) {
+            startDate = DateTime.now().setZone('Asia/Seoul').minus({ days: 2 }).toISODate();
+        } else {
+            startDate = endDate;
+        }
+
+        axios
+            .get(`/api/trades?startDate=${startDate}&endDate=${endDate}`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(false);
@@ -219,6 +250,20 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 console.error('There was an error fetching the virtual trades!', error);
             });
     };
+
+    const isRecentTrade = (trade) => {
+        const tradeDate = new Date(trade.buyTime);
+        const today = new Date();
+        const threeDaysAgo = new Date();
+        threeDaysAgo.setDate(today.getDate() - 2); // 오늘 포함 3일 전
+
+        return tradeDate >= threeDaysAgo && tradeDate <= today;
+    };
+
+
+
+
+
 
     const isTodayTrade = (trade) => {
         const tradeDate = new Date(trade.buyTime);
@@ -365,7 +410,8 @@ const MonitoringAndTrades = () => {
         const savedFields = localStorage.getItem('selectedFields');
         return savedFields ? JSON.parse(savedFields) : {
             '2% 매매내역': true,
-            '3% 매매내역': true
+            '3% 매매내역': true,
+            '3일치 표시': false // 추가된 필드
         };
     });
 
