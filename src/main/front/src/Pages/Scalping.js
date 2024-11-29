@@ -34,12 +34,50 @@ axios.defaults.baseURL = 'https://scalping.app';
 
 // axios.defaults.baseURL = 'http://localhost:8080';
 
-const TitleText = () => {
+const TitleText = ({ tradeStats }) => {
+    const { winRate = 0, lossRate = 0, ongoingRate = 0 } = tradeStats || {};
+
     return (
         <Card sx={{ marginBottom: 2 }}>
             <CardContent>
                 <Typography variant="h5">喝!!!!!!!!!!!!</Typography>
                 <Typography variant="h5">다산 파이버는 당장 1% 수익대까지 회복하라!!!!</Typography>
+                <Typography variant="h6" sx={{ marginTop: 2, marginBottom: 1 }}>오늘의 매매 결과 점유율</Typography>
+
+                {/* 누적 프로그래스바 */}
+                <Box sx={{ position: 'relative', height: 30, backgroundColor: '#f0f0f0', borderRadius: 5, overflow: 'hidden' }}>
+                    <Box
+                        sx={{
+                            width: `${winRate}%`,
+                            backgroundColor: '#4caf50', // 승리 색상
+                            height: '100%',
+                            display: 'inline-block',
+                        }}
+                    />
+                    <Box
+                        sx={{
+                            width: `${lossRate}%`,
+                            backgroundColor: '#f44336', // 패배 색상
+                            height: '100%',
+                            display: 'inline-block',
+                        }}
+                    />
+                    <Box
+                        sx={{
+                            width: `${ongoingRate}%`,
+                            backgroundColor: '#2196f3', // 진행중 색상
+                            height: '100%',
+                            display: 'inline-block',
+                        }}
+                    />
+                </Box>
+
+                {/* 레이블 표시 */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 1 }}>
+                    <Typography sx={{ color: '#4caf50' }}>승리: {winRate}%</Typography>
+                    <Typography sx={{ color: '#f44336' }}>패배: {lossRate}%</Typography>
+                    <Typography sx={{ color: '#2196f3' }}>진행중: {ongoingRate}%</Typography>
+                </Box>
             </CardContent>
         </Card>
     );
@@ -154,7 +192,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
     );
 };
 
-const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds }) => {
+const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats  }) => {
     const [virtualTrades, setVirtualTrades] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
@@ -164,6 +202,11 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     useEffect(() => {
         fetchTodayTrades();
     }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
+
+    useEffect(() => {
+        const todayTrades = virtualTrades.filter(isTodayTrade);
+        calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
+    }, [virtualTrades]);
 
     const fetchTodayTrades = () => {
         const today = DateTime.now().setZone('Asia/Seoul').toISODate();
@@ -175,6 +218,32 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
             .catch(error => {
                 console.error('There was an error fetching the virtual trades!', error);
             });
+    };
+
+    const isTodayTrade = (trade) => {
+        const tradeDate = new Date(trade.buyTime);
+        const today = new Date();
+        return (
+            tradeDate.getFullYear() === today.getFullYear() &&
+            tradeDate.getMonth() === today.getMonth() &&
+            tradeDate.getDate() === today.getDate()
+        );
+    };
+
+
+    const calculateTradeStats = (trades) => {
+        const totalTrades = trades.length;
+        const wins = trades.filter(trade => trade.tradeResult === '승리').length;
+        const losses = trades.filter(trade => trade.tradeResult === '패배').length;
+        const ongoing = totalTrades - wins - losses;
+
+        const stats = {
+            winRate: ((wins / totalTrades) * 100).toFixed(2) || 0,
+            lossRate: ((losses / totalTrades) * 100).toFixed(2) || 0,
+            ongoingRate: ((ongoing / totalTrades) * 100).toFixed(2) || 0,
+        };
+
+        setTradeStats(stats);
     };
 
     const handleSearchChange = (e) => {
@@ -284,6 +353,11 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
 
 const MonitoringAndTrades = () => {
+    const [tradeStats, setTradeStats] = useState({
+        winRate: 0,
+        lossRate: 0,
+        ongoingRate: 0,
+    }); // 초기값 명시
     const isMobile = useMediaQuery('(max-width:600px)');
     const containerRef = useRef(null);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -427,6 +501,7 @@ const MonitoringAndTrades = () => {
                             onConfigClick={handleOpenConfig}
                             onTradeSelect={setSelectedTradeIds}
                             selectedTradeIds={selectedTradeIds}
+                            setTradeStats={setTradeStats} // 비율 업데이트
                         />
                     </Grid>
                 </Grid>
