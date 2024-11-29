@@ -484,7 +484,7 @@ const MonitoringAndTrades = () => {
                     justifyContent="center"
                 >
                     <Grid item xs={12} md={6}>
-                        <TitleText />
+                        <TitleText tradeStats={tradeStats} />
                     </Grid>
                     <Grid
                         item
