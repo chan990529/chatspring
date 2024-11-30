@@ -20,7 +20,7 @@ function App() {
                     <Route path="Scalping" element={<ScalpingPage />} />
                     <Route path="Statistics" element={<StatisticsPage />} />
                     <Route path="Status" element={<StatusPage />}/>
-                    <Route path="Status" element={<ReviewPage />}/>
+                    <Route path="Review" element={<ReviewPage />}/>
                 </Route>
             </Routes>
         </Router>
