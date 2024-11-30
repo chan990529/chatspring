@@ -440,7 +440,6 @@ const MonitoringAndTrades = () => {
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <Box sx={{display: 'flex', alignItems: 'center', gap: 2}}>
                                     <DatePicker
-                                        label="시작일"
                                         value={startDate}
                                         onChange={(newValue) => setStartDate(newValue)}
                                         slots={{
@@ -448,9 +447,9 @@ const MonitoringAndTrades = () => {
                                                 <TextField
                                                     {...params}
                                                     sx={{
-                                                        width: '150px',
+                                                        width: '50px',
                                                         '& .MuiInputBase-input': {
-                                                            fontSize: '0.9rem',
+                                                            fontSize: '0.3rem',
                                                             padding: '10px'
                                                         }
                                                     }}
@@ -460,7 +459,6 @@ const MonitoringAndTrades = () => {
                                     />
                                     <Box sx={{mx: 2}}>~</Box>
                                     <DatePicker
-                                        label="종료일"
                                         value={endDate}
                                         onChange={(newValue) => setEndDate(newValue)}
                                         slots={{
@@ -468,9 +466,9 @@ const MonitoringAndTrades = () => {
                                                 <TextField
                                                     {...params}
                                                     sx={{
-                                                        width: '150px',
+                                                        width: '50px',
                                                         '& .MuiInputBase-input': {
-                                                            fontSize: '0.9rem',
+                                                            fontSize: '0.3rem',
                                                             padding: '10px'
                                                         }
                                                     }}
@@ -481,21 +479,21 @@ const MonitoringAndTrades = () => {
                                     />
                                 </Box>
                             </LocalizationProvider>
-                            <Button
-                                variant="contained"
-                                onClick={handleSearch}
-                                disabled={!startDate || !endDate || isSearching}
-                                sx={{
-                                    height: '56px',  // DatePicker 높이와 맞추기
-                                    minWidth: '120px',
-                                    backgroundColor: '#1976d2',
-                                    '&:hover': {
-                                        backgroundColor: '#1565c0'
-                                    }
-                                }}
-                            >
-                                {isSearching ? '검색 중...' : '검색'}
-                            </Button>
+                            {/*<Button*/}
+                            {/*    variant="contained"*/}
+                            {/*    onClick={handleSearch}*/}
+                            {/*    disabled={!startDate || !endDate || isSearching}*/}
+                            {/*    sx={{*/}
+                            {/*        height: '56px',  // DatePicker 높이와 맞추기*/}
+                            {/*        minWidth: '120px',*/}
+                            {/*        backgroundColor: '#1976d2',*/}
+                            {/*        '&:hover': {*/}
+                            {/*            backgroundColor: '#1565c0'*/}
+                            {/*        }*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            {/*    {isSearching ? '검색 중...' : '검색'}*/}
+                            {/*</Button>*/}
                         </Box>
                     )}
                 </Box>
