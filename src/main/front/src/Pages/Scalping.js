@@ -240,13 +240,10 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
 
     const isTodayTrade = (trade) => {
-        const tradeDate = new Date(trade.buyTime);
-        const today = new Date();
-        return (
-            tradeDate.getFullYear() === today.getFullYear() &&
-            tradeDate.getMonth() === today.getMonth() &&
-            tradeDate.getDate() === today.getDate()
-        );
+        const tradeDate = DateTime.fromISO(trade.buyTime).setZone('Asia/Seoul');
+        const today = DateTime.now().setZone('Asia/Seoul');
+
+        return tradeDate.hasSame(today, 'day');
     };
 
 
@@ -292,21 +289,14 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
     const filteredTrades = virtualTrades
         .filter(trade => {
-            const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
+            const matchesSearch = searchQuery.trim() === '' || trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesResult =
                 resultFilter === 'all' ||
                 (resultFilter === '승리' && trade.tradeResult === '승리') ||
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult);
 
-            const today = new Date();
-            const tradeDate = new Date(trade.buyTime);
-            const isSameDay =
-                today.getFullYear() === tradeDate.getFullYear() &&
-                today.getMonth() === tradeDate.getMonth() &&
-                today.getDate() === tradeDate.getDate();
-
-            return matchesSearch && matchesResult && (searchQuery.trim() !== '');
+            return matchesSearch && matchesResult;
         })
         .sort((a, b) =>
             sortOrder === 'asc'
