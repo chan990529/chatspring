@@ -289,6 +289,11 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
     const filteredTrades = virtualTrades
         .filter(trade => {
+            const tradeDate = DateTime.fromISO(trade.buyTime).setZone('Asia/Seoul');
+            const today = DateTime.now().setZone('Asia/Seoul');
+            const isToday = tradeDate.hasSame(today, 'day');
+
+            // 검색어와 결과 필터, 그리고 오늘 날짜만 필터링
             const matchesSearch = searchQuery.trim() === '' || trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesResult =
                 resultFilter === 'all' ||
@@ -296,7 +301,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult);
 
-            return matchesSearch && matchesResult;
+            return isToday && matchesSearch && matchesResult;
         })
         .sort((a, b) =>
             sortOrder === 'asc'
