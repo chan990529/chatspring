@@ -397,8 +397,7 @@ const MonitoringAndTrades = () => {
         const savedFields = localStorage.getItem('selectedFields');
         return savedFields ? JSON.parse(savedFields) : {
             '2% 매매내역': true,
-            '3% 매매내역': true,
-            '3일치 표시': false // 추가된 필드
+            '3% 매매내역': true
         };
     });
 

@@ -6,7 +6,7 @@ import ScalpingPage from './Pages/Scalping';
 import StatisticsPage from './Pages/Statistics';
 import TradeNotification from "./Pages/WebSocket"; // TradeNotification을 import
 import StatusPage from "./Pages/Status";
-import ReviewPage from './Pages/Review'
+import ReviewPage from './Pages/Review';
 
 
 function App() {
