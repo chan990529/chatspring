@@ -198,50 +198,36 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const [isSearching, setIsSearching] = useState(false);
     const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
     const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
+    const [authKey, setAuthKey] = useState(''); // 사용자 입력 키
+    const [isAuthorized, setIsAuthorized] = useState(false); // 권한 부여 여부
 
-    // useEffect(() => {
-    //     fetchTodayTrades();
-    // }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
-    //
-    //
-    //
-    // useEffect(() => {
-    //     const todayTrades = virtualTrades.filter(isTodayTrade);
-    //     calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
-    // }, [virtualTrades]);
 
-    // const fetchTodayTrades = () => {
-    //     const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-    //     axios.get(`/api/trades?date=${today}`)
-    //         .then(response => {
-    //             setVirtualTrades(response.data);
-    //             setIsSearching(false);
-    //         })
-    //         .catch(error => {
-    //             console.error('There was an error fetching the virtual trades!', error);
-    //         });
-    // };
-    useEffect(() => {
-        fetchTrades();
-    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTrades 호출
+
+
 
     useEffect(() => {
-        const filteredTrades = virtualTrades.filter(isRecentTrade);
-        calculateTradeStats(filteredTrades); // 최근 날짜 데이터만 사용하여 비율 계산
+        // 로컬 스토리지에서 권한 확인
+        const savedAuth = localStorage.getItem('user_auth');
+        if (savedAuth) {
+            const parsedAuth = JSON.parse(savedAuth);
+            if (new Date(parsedAuth.expiry) > new Date()) {
+                setIsAuthorized(true);
+            } else {
+                localStorage.removeItem('user_auth'); // 만료된 권한 삭제
+            }
+        }
+        fetchTodayTrades();
+    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
+
+
+    useEffect(() => {
+        const todayTrades = virtualTrades.filter(isTodayTrade);
+        calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
     }, [virtualTrades]);
 
-    const fetchTrades = () => {
-        const endDate = DateTime.now().setZone('Asia/Seoul').toISODate();
-        let startDate;
-
-        if (selectedFields['3일치 표시']) {
-            startDate = DateTime.now().setZone('Asia/Seoul').minus({ days: 2 }).toISODate();
-        } else {
-            startDate = endDate;
-        }
-
-        axios
-            .get(`/api/trades?startDate=${startDate}&endDate=${endDate}`)
+    const fetchTodayTrades = () => {
+        const today = DateTime.now().setZone('Asia/Seoul').toISODate();
+        axios.get(`/api/trades?date=${today}`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(false);
@@ -250,18 +236,6 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 console.error('There was an error fetching the virtual trades!', error);
             });
     };
-
-    const isRecentTrade = (trade) => {
-        const tradeDate = new Date(trade.buyTime);
-        const today = new Date();
-        const threeDaysAgo = new Date();
-        threeDaysAgo.setDate(today.getDate() - 2); // 오늘 포함 3일 전
-
-        return tradeDate >= threeDaysAgo && tradeDate <= today;
-    };
-
-
-
 
 
 
@@ -292,7 +266,20 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     };
 
     const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
+        const newQuery = e.target.value;
+        setSearchQuery(newQuery);
+
+        if (newQuery === '나는천재치맨') {
+            const expiryDate = new Date();
+            expiryDate.setMonth(expiryDate.getMonth() + 1); // 한 달 후 만료
+            localStorage.setItem('user_auth', JSON.stringify({ expiry: expiryDate }));
+            setIsAuthorized(true);
+            alert('권한이 부여되었습니다.');
+        }
+        // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
+        else if (newQuery === '') {
+                fetchTodayTrades();
+            }
     };
 
     const handleSortOrderChange = (e) => {
@@ -319,10 +306,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 today.getMonth() === tradeDate.getMonth() &&
                 today.getDate() === tradeDate.getDate();
 
-            return matchesSearch && matchesResult && (
-                searchQuery.trim() !== '' ||
-                (selectedFields['3일치 표시'] ? isRecentTrade(trade) : isSameDay)
-            );
+            return matchesSearch && matchesResult && (searchQuery.trim() !== '');
         })
         .sort((a, b) =>
             sortOrder === 'asc'
@@ -425,8 +409,7 @@ const MonitoringAndTrades = () => {
         setRefreshKey((prevKey) => prevKey + 1);
     };
 
-    // const handleOpenConfig = () => setOpenConfig(true);
-    // const handleCloseConfig = () => setOpenConfig(false);
+
     const handleClearSelection = () => {
         setSelectedTradeIds([]);
     };

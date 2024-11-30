@@ -6,6 +6,8 @@ import ScalpingPage from './Pages/Scalping';
 import StatisticsPage from './Pages/Statistics';
 import TradeNotification from "./Pages/WebSocket"; // TradeNotification을 import
 import StatusPage from "./Pages/Status";
+import ReviewPage from './Pages/Review'
+
 
 function App() {
     return (
@@ -18,6 +20,7 @@ function App() {
                     <Route path="Scalping" element={<ScalpingPage />} />
                     <Route path="Statistics" element={<StatisticsPage />} />
                     <Route path="Status" element={<StatusPage />}/>
+                    <Route path="Status" element={<ReviewPage />}/>
                 </Route>
             </Routes>
         </Router>
