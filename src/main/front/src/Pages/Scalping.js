@@ -224,7 +224,10 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
     const fetchTodayTrades = () => {
         const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-        axios.get(`/api/trades?date=${today}`)
+        const todayStart = `${today}T00:00:00`;
+        const todayEnd = `${today}T23:59:59`;
+
+        axios.get(`/api/trades/filterByDate?startDate=${todayStart}&endDate=${todayEnd}`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(false);
@@ -279,7 +282,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     };
 
     const fetchSearchResults = (query) => {
-        axios.get(`/api/trades/search?query=${query}`)
+        axios.get(`/api/trades/search?stockCode=${query}`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(true);  // 검색 모드로 설정
