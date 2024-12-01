@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 import {
     TextField,
@@ -33,7 +33,6 @@ import { Popover } from '@mui/material';
 axios.defaults.baseURL = 'https://scalping.app';
 
 // axios.defaults.baseURL = 'http://localhost:8080';
-
 const TitleText = ({ tradeStats }) => {
     const { winRate = 0, lossRate = 0, ongoingRate = 0 } = tradeStats || {};
 
@@ -200,7 +199,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
     const [authKey, setAuthKey] = useState(''); // 사용자 입력 키
     const [isAuthorized, setIsAuthorized] = useState(false); // 권한 부여 여부
-
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         // 로컬 스토리지에서 권한 확인
@@ -223,15 +222,26 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     }, [virtualTrades]);
 
     // 기존 코드 (작동하는 버전)
-    const fetchTodayTrades = () => {
-        const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-        axios.get(`/api/trades?date=${today}`)  // 단순히 date 파라미터 사용
-            .then(response => {
-                setVirtualTrades(response.data);
-                setIsSearching(false);
-            });
-    };
+    const fetchTodayTrades = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const today = DateTime.now().setZone('Asia/Seoul').toISODate();
+            const response = await axios.get(`/api/trades?date=${today}`);
+            setVirtualTrades(response.data);
 
+            // 데이터를 받아온 직후 즉시 통계 계산
+            const todayTrades = response.data.filter(isTodayTrade);
+            calculateTradeStats(todayTrades);
+        } catch (error) {
+            console.error('Failed to fetch trades:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchTodayTrades();
+    }, [fetchTodayTrades, refreshKey]);
 
 
     const isTodayTrade = (trade) => {
@@ -260,10 +270,12 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         setTradeStats(stats);
     };
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = async (e) => {
         const newQuery = e.target.value;
         setSearchQuery(newQuery);
+        setIsLoading(true);
 
+        // 권한 부여 로직 유지
         if (newQuery === '나는천재치맨') {
             const expiryDate = new Date();
             expiryDate.setMonth(expiryDate.getMonth() + 1); // 한 달 후 만료
@@ -271,11 +283,21 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
             setIsAuthorized(true);
             alert('권한이 부여되었습니다.');
         }
-        // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
-        if (newQuery === '') {
-            fetchTodayTrades();  // 검색어가 없으면 오늘 데이터
-        } else {
-            fetchSearchResults(newQuery);  // 검색어가 있으면 전체 검색
+
+        try {
+            if (newQuery === '') {
+                await fetchTodayTrades();  // 검색어가 없으면 오늘 데이터
+            } else {
+                const response = await axios.get(`/api/trades/search?stockName=${newQuery}`);
+                setVirtualTrades(response.data);
+                // 검색 결과에 대한 통계도 업데이트
+                const todayTrades = response.data.filter(isTodayTrade);
+                calculateTradeStats(todayTrades);
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
