@@ -305,6 +305,13 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult);
 
+            const today = new Date();
+            const tradeDate = new Date(trade.buyTime);
+            const isSameDay =
+                today.getFullYear() === tradeDate.getFullYear() &&
+                today.getMonth() === tradeDate.getMonth() &&
+                today.getDate() === tradeDate.getDate();
+
             return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
         })
         .sort((a, b) =>
