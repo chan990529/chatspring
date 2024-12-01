@@ -222,18 +222,13 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
     }, [virtualTrades]);
 
+// 기존 코드 (작동하는 버전)
     const fetchTodayTrades = () => {
         const today = DateTime.now().setZone('Asia/Seoul').toISODate();
-        const todayStart = `${today}T00:00:00`;
-        const todayEnd = `${today}T23:59:59`;
-
-        axios.get(`/api/trades/filterByDate?startDate=${todayStart}&endDate=${todayEnd}`)
+        axios.get(`/api/trades?date=${today}`)  // 단순히 date 파라미터 사용
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(false);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the virtual trades!', error);
             });
     };
 
@@ -302,8 +297,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
     const filteredTrades = virtualTrades
         .filter(trade => {
-            // 검색 중이 아닐 때만 오늘 날짜 필터링 적용
-            const matchesToday = isSearching ? true : isTodayTrade(trade);
+            const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
 
             const matchesResult =
                 resultFilter === 'all' ||
@@ -311,7 +305,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult);
 
-            return matchesToday && matchesResult;
+            return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
         })
         .sort((a, b) =>
             sortOrder === 'asc'
