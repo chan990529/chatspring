@@ -202,9 +202,6 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const [isAuthorized, setIsAuthorized] = useState(false); // 권한 부여 여부
 
 
-
-
-
     useEffect(() => {
         // 로컬 스토리지에서 권한 확인
         const savedAuth = localStorage.getItem('user_auth');
@@ -274,9 +271,22 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
             alert('권한이 부여되었습니다.');
         }
         // 검색어가 비워졌을 때 오늘 날짜 데이터로 복원
-        else if (newQuery === '') {
-                fetchTodayTrades();
-            }
+        if (newQuery === '') {
+            fetchTodayTrades();  // 검색어가 없으면 오늘 데이터
+        } else {
+            fetchSearchResults(newQuery);  // 검색어가 있으면 전체 검색
+        }
+    };
+
+    const fetchSearchResults = (query) => {
+        axios.get(`/api/trades/search?query=${query}`)
+            .then(response => {
+                setVirtualTrades(response.data);
+                setIsSearching(true);  // 검색 모드로 설정
+            })
+            .catch(error => {
+                console.error('Error searching trades:', error);
+            });
     };
 
     const handleSortOrderChange = (e) => {
@@ -289,19 +299,16 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
     const filteredTrades = virtualTrades
         .filter(trade => {
-            const tradeDate = DateTime.fromISO(trade.buyTime).setZone('Asia/Seoul');
-            const today = DateTime.now().setZone('Asia/Seoul');
-            const isToday = tradeDate.hasSame(today, 'day');
+            // 검색 중이 아닐 때만 오늘 날짜 필터링 적용
+            const matchesToday = isSearching ? true : isTodayTrade(trade);
 
-            // 검색어와 결과 필터, 그리고 오늘 날짜만 필터링
-            const matchesSearch = searchQuery.trim() === '' || trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesResult =
                 resultFilter === 'all' ||
                 (resultFilter === '승리' && trade.tradeResult === '승리') ||
                 (resultFilter === '패배' && trade.tradeResult === '패배') ||
                 (resultFilter === 'none' && !trade.tradeResult);
 
-            return isToday && matchesSearch && matchesResult;
+            return matchesToday && matchesResult;
         })
         .sort((a, b) =>
             sortOrder === 'asc'
