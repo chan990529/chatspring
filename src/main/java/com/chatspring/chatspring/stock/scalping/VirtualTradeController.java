@@ -34,9 +34,14 @@ public class VirtualTradeController {
         virtualTradeService.delete(id);
     }
 
+//    @GetMapping("/search")
+//    public List<VirtualTrade> findByStockCode(@RequestParam String stockCode) {
+//        return virtualTradeService.findByStockCode(stockCode);
+//    }
+
     @GetMapping("/search")
-    public List<VirtualTrade> findByStockCode(@RequestParam String stockCode) {
-        return virtualTradeService.findByStockCode(stockCode);
+    public List<VirtualTrade> findByStockName(@RequestParam String stockName) {
+        return virtualTradeService.findByStockName(stockName);
     }
 
     @GetMapping("/filterByDate")

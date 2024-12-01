@@ -222,7 +222,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
     }, [virtualTrades]);
 
-// 기존 코드 (작동하는 버전)
+    // 기존 코드 (작동하는 버전)
     const fetchTodayTrades = () => {
         const today = DateTime.now().setZone('Asia/Seoul').toISODate();
         axios.get(`/api/trades?date=${today}`)  // 단순히 date 파라미터 사용
@@ -235,10 +235,13 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
 
 
     const isTodayTrade = (trade) => {
-        const tradeDate = DateTime.fromISO(trade.buyTime).setZone('Asia/Seoul');
-        const today = DateTime.now().setZone('Asia/Seoul');
-
-        return tradeDate.hasSame(today, 'day');
+        const tradeDate = new Date(trade.buyTime);
+        const today = new Date();
+        return (
+            tradeDate.getFullYear() === today.getFullYear() &&
+            tradeDate.getMonth() === today.getMonth() &&
+            tradeDate.getDate() === today.getDate()
+        );
     };
 
 
@@ -277,7 +280,7 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     };
 
     const fetchSearchResults = (query) => {
-        axios.get(`/api/trades/search?stockCode=${query}`)
+        axios.get(`/api/trades/search?stockName=${query}`)
             .then(response => {
                 setVirtualTrades(response.data);
                 setIsSearching(true);  // 검색 모드로 설정
@@ -298,7 +301,6 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const filteredTrades = virtualTrades
         .filter(trade => {
             const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
-
             const matchesResult =
                 resultFilter === 'all' ||
                 (resultFilter === '승리' && trade.tradeResult === '승리') ||

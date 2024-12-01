@@ -15,5 +15,8 @@ public interface VirtualTradeRepository extends JpaRepository<VirtualTrade, Long
     // 특정 기간 동안의 거래 내역 조회
     @Query("SELECT v FROM VirtualTrade v WHERE v.buyTime BETWEEN :startDate AND :endDate")
     List<VirtualTrade> findByBuyTimeBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    List<VirtualTrade> findByStockNameContainingIgnoreCase(String stockName);
+
 }
 

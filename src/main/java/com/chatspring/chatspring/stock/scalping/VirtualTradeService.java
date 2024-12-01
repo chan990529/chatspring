@@ -32,6 +32,10 @@ public class VirtualTradeService {
         return virtualTradeRepository.findByStockCodeContainingIgnoreCase(stockCode);
     }
 
+    public List<VirtualTrade> findByStockName(String stockName) {
+        return virtualTradeRepository.findByStockNameContainingIgnoreCase(stockName);
+    }
+
     public List<VirtualTrade> findByBuyTimeBetween(LocalDateTime startDate, LocalDateTime endDate) {
         return virtualTradeRepository.findByBuyTimeBetween(startDate, endDate);
     }
