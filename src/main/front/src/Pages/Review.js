@@ -34,8 +34,9 @@ import ScrollToTop from './ScrollToTop';
 import RefreshableGrid from "./RefreshableGrid";
 import { Popover } from '@mui/material';
 
-axios.defaults.baseURL = 'https://scalping.app';
+// axios.defaults.baseURL = 'https://scalping.app';
 
+axios.defaults.baseURL = 'http://localhost:8080';
 
 
 const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
@@ -213,6 +214,7 @@ const MonitoringAndTrades = () => {
     });
     const [sortOrder, setSortOrder] = useState('desc');
     const [resultFilter, setResultFilter] = useState('all');
+    const [numBuysFilter, setNumBuysFilter] = useState('all');
     const [selectedTradeIds, setSelectedTradeIds] = useState([]);
     const [openConfig, setOpenConfig] = useState(false);
     const [dateRange, setDateRange] = useState([null, null]); // 날짜 범위
@@ -276,6 +278,10 @@ const MonitoringAndTrades = () => {
         }
     }, [resultFilter, virtualTrades, currentPage, itemsPerPage]);
 
+    useEffect(() => {
+        setCurrentPage(1); // 필터 변경 시 첫 페이지로 이동
+    }, [numBuysFilter]);
+
     const fetchTrades = () => {
         let endDateValue = DateTime.now().setZone('Asia/Seoul').toISODate();
         let startDateValue;
@@ -326,7 +332,7 @@ const MonitoringAndTrades = () => {
     const getFilteredAndSortedTrades = (trades) => {
         if (!Array.isArray(trades)) return [];
 
-        // 1. 먼저 매매 결과로 필터링
+        // 1. 매매 결과 필터링
         const filteredByResult = trades.filter(trade =>
             resultFilter === 'all' ||
             (resultFilter === '승리' && trade.tradeResult === '승리') ||
@@ -334,20 +340,27 @@ const MonitoringAndTrades = () => {
             (resultFilter === 'none' && !trade.tradeResult)
         );
 
-        // 2. 정렬
-        const sortedTrades = filteredByResult.sort((a, b) =>
+        // 2. 매매 횟수 필터링
+        const filteredByNumBuys = filteredByResult.filter(trade => {
+            if (numBuysFilter === 'all') return true;
+            if (numBuysFilter === '10') return trade.numBuys === 10;
+            return true;
+        });
+
+        // 3. 정렬
+        const sortedTrades = filteredByNumBuys.sort((a, b) =>
             sortOrder === 'asc'
                 ? new Date(a.buyTime) - new Date(b.buyTime)
                 : new Date(b.buyTime) - new Date(a.buyTime)
         );
 
-        // 3. 전체 페이지 수 업데이트
+        // 4. 전체 페이지 수 업데이트
         const newTotalPages = Math.ceil(sortedTrades.length / itemsPerPage);
         if (totalPages !== newTotalPages) {
             setTotalPages(newTotalPages);
         }
 
-        // 4. 현재 페이지에 해당하는 데이터만 반환
+        // 5. 현재 페이지 데이터만 반환
         const start = (currentPage - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
@@ -479,21 +492,6 @@ const MonitoringAndTrades = () => {
                                     />
                                 </Box>
                             </LocalizationProvider>
-                            {/*<Button*/}
-                            {/*    variant="contained"*/}
-                            {/*    onClick={handleSearch}*/}
-                            {/*    disabled={!startDate || !endDate || isSearching}*/}
-                            {/*    sx={{*/}
-                            {/*        height: '56px',  // DatePicker 높이와 맞추기*/}
-                            {/*        minWidth: '120px',*/}
-                            {/*        backgroundColor: '#1976d2',*/}
-                            {/*        '&:hover': {*/}
-                            {/*            backgroundColor: '#1565c0'*/}
-                            {/*        }*/}
-                            {/*    }}*/}
-                            {/*>*/}
-                            {/*    {isSearching ? '검색 중...' : '검색'}*/}
-                            {/*</Button>*/}
                         </Box>
                     )}
                 </Box>
@@ -519,36 +517,58 @@ const MonitoringAndTrades = () => {
                             handleClearSelection={handleClearSelection}
                         />
                         {/* 매매 결과 필터 */}
-                        <FormControl fullWidth margin="normal" sx={{ marginBottom: 2 }}>
-                            <InputLabel>매매 결과 필터</InputLabel>
-                            <Select
-                                value={resultFilter}
-                                onChange={handleResultFilterChange}
-                                label="매매 결과 필터"
-                            >
-                                <MenuItem value="all">전체</MenuItem>
-                                <MenuItem value="승리">승리</MenuItem>
-                                <MenuItem value="패배">패배</MenuItem>
-                                <MenuItem value="none">진행중</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between', // 요소 간의 간격 균형 있게 배치
+                                gap: 2, // 요소 간 간격
+                                flexWrap: 'wrap' // 화면이 좁을 경우 줄 바꿈
+                            }}
+                        >
+                            <FormControl sx={{ flex: 1 }} margin="normal">
+                                <InputLabel>매매 결과 필터</InputLabel>
+                                <Select
+                                    value={resultFilter}
+                                    onChange={handleResultFilterChange}
+                                    label="매매 결과 필터"
+                                >
+                                    <MenuItem value="all">전체</MenuItem>
+                                    <MenuItem value="승리">승리</MenuItem>
+                                    <MenuItem value="패배">패배</MenuItem>
+                                    <MenuItem value="none">진행중</MenuItem>
+                                </Select>
+                            </FormControl>
+
+                            <FormControl sx={{ flex: 1 }} margin="normal">
+                                <InputLabel>매매 횟수 필터</InputLabel>
+                                <Select
+                                    value={numBuysFilter}
+                                    onChange={(e) => setNumBuysFilter(e.target.value)}
+                                    label="매매 횟수 필터"
+                                >
+                                    <MenuItem value="all">전체</MenuItem>
+                                    <MenuItem value="10">10회</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
 
                         {/* 검색창 */}
-                        <TextField
-                            label="종목명 검색"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            disabled={isSearching}
-                            sx={{
-                                marginBottom: 2,
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: '12px',
-                                }
-                            }}
-                        />
+                        {/*<TextField*/}
+                        {/*    label="종목명 검색"*/}
+                        {/*    variant="outlined"*/}
+                        {/*    fullWidth*/}
+                        {/*    margin="normal"*/}
+                        {/*    value={searchQuery}*/}
+                        {/*    onChange={(e) => setSearchQuery(e.target.value)}*/}
+                        {/*    disabled={isSearching}*/}
+                        {/*    sx={{*/}
+                        {/*        marginBottom: 2,*/}
+                        {/*        '& .MuiOutlinedInput-root': {*/}
+                        {/*            borderRadius: '12px',*/}
+                        {/*        }*/}
+                        {/*    }}*/}
+                        {/*/>*/}
 
                         {/* 검색 결과 표시 */}
                         {isSearching ? (
