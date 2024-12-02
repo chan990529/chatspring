@@ -34,9 +34,9 @@ import ScrollToTop from './ScrollToTop';
 import RefreshableGrid from "./RefreshableGrid";
 import { Popover } from '@mui/material';
 
-// axios.defaults.baseURL = 'https://scalping.app';
+axios.defaults.baseURL = 'https://scalping.app';
 
-axios.defaults.baseURL = 'http://localhost:8080';
+// axios.defaults.baseURL = 'http://localhost:8080';
 
 
 const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
