@@ -39,8 +39,6 @@ const TitleText = ({ tradeStats }) => {
     return (
         <Card sx={{ marginBottom: 2 }}>
             <CardContent>
-                <Typography variant="h5">喝!!!!!!!!!!!!</Typography>
-                <Typography variant="h5">다산 파이버는 당장 1% 수익대까지 회복하라!!!!</Typography>
                 <Typography variant="h6" sx={{ marginTop: 2, marginBottom: 1 }}>오늘의 매매 결과 점유율</Typography>
 
                 {/* 누적 프로그래스바 */}
