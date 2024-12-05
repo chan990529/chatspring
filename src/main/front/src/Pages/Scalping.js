@@ -189,37 +189,39 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
     );
 };
 
-const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats  }) => {
+const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats }) => {
     const [virtualTrades, setVirtualTrades] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
     const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
     const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
-    const [authKey, setAuthKey] = useState(''); // 사용자 입력 키
-    const [isAuthorized, setIsAuthorized] = useState(false); // 권한 부여 여부
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedTradesCache, setSelectedTradesCache] = useState({});
+    const [isAuthorized, setIsAuthorized] = useState(false);
+
 
     useEffect(() => {
-        // 로컬 스토리지에서 권한 확인
-        const savedAuth = localStorage.getItem('user_auth');
-        if (savedAuth) {
-            const parsedAuth = JSON.parse(savedAuth);
-            if (new Date(parsedAuth.expiry) > new Date()) {
-                setIsAuthorized(true);
-            } else {
-                localStorage.removeItem('user_auth'); // 만료된 권한 삭제
-            }
-        }
         fetchTodayTrades();
-    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출
-
+    }, [refreshKey]); // refreshKey가 변경될 때마다 fetchTodayTrades를 호출np
 
     useEffect(() => {
         const todayTrades = virtualTrades.filter(isTodayTrade);
         calculateTradeStats(todayTrades); // 오늘 날짜 데이터만 사용하여 비율 계산
     }, [virtualTrades]);
 
-    // 기존 코드 (작동하는 버전)
+    useEffect(() => {
+        const newCache = {};
+        selectedTradeIds.forEach(id => {
+            const trade = virtualTrades.find(t => t.tradeId === id);
+            if (trade) {
+                newCache[id] = trade;
+            } else if (selectedTradesCache[id]) {
+                newCache[id] = selectedTradesCache[id];
+            }
+        });
+        setSelectedTradesCache(newCache);
+    }, [selectedTradeIds, virtualTrades]);
+
     const fetchTodayTrades = useCallback(async () => {
         setIsLoading(true);
         try {
@@ -237,10 +239,10 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         }
     }, []);
 
+    // refreshKey 변경 시 즉시 데이터 갱신
     useEffect(() => {
         fetchTodayTrades();
     }, [fetchTodayTrades, refreshKey]);
-
 
     const isTodayTrade = (trade) => {
         const tradeDate = new Date(trade.buyTime);
@@ -273,23 +275,26 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         setSearchQuery(newQuery);
         setIsLoading(true);
 
-        // 권한 부여 로직 유지
+        // 권한 부여 로직
         if (newQuery === '나는천재치맨') {
             const expiryDate = new Date();
-            expiryDate.setMonth(expiryDate.getMonth() + 1); // 한 달 후 만료
+            expiryDate.setMonth(expiryDate.getMonth() + 1);
             localStorage.setItem('user_auth', JSON.stringify({ expiry: expiryDate }));
             setIsAuthorized(true);
             alert('권한이 부여되었습니다.');
+            setSearchQuery('');
+            setIsLoading(false);
+            return;
         }
 
         try {
             if (newQuery === '') {
-                await fetchTodayTrades();  // 검색어가 없으면 오늘 데이터
+                await fetchTodayTrades();
             } else {
                 const response = await axios.get(`/api/trades/search?stockName=${newQuery}`);
-                setVirtualTrades(response.data);
-                // 검색 결과에 대한 통계도 업데이트
-                const todayTrades = response.data.filter(isTodayTrade);
+                const searchResults = response.data;
+                setVirtualTrades(searchResults);
+                const todayTrades = searchResults.filter(isTodayTrade);
                 calculateTradeStats(todayTrades);
             }
         } catch (error) {
@@ -299,16 +304,6 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         }
     };
 
-    const fetchSearchResults = (query) => {
-        axios.get(`/api/trades/search?stockName=${query}`)
-            .then(response => {
-                setVirtualTrades(response.data);
-                setIsSearching(true);  // 검색 모드로 설정
-            })
-            .catch(error => {
-                console.error('Error searching trades:', error);
-            });
-    };
 
     const handleSortOrderChange = (e) => {
         setSortOrder(e.target.value);
@@ -318,29 +313,32 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
         setResultFilter(e.target.value);
     };
 
-    const filteredTrades = virtualTrades
-        .filter(trade => {
-            const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesResult =
-                resultFilter === 'all' ||
-                (resultFilter === '승리' && trade.tradeResult === '승리') ||
-                (resultFilter === '패배' && trade.tradeResult === '패배') ||
-                (resultFilter === 'none' && !trade.tradeResult);
+    const getFilteredTrades = () => {
+        // 전체 거래 목록에서 필터링
+        return virtualTrades
+            .filter(trade => {
+                const matchesSearch = trade.stockName.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesResult =
+                    resultFilter === 'all' ||
+                    (resultFilter === '승리' && trade.tradeResult === '승리') ||
+                    (resultFilter === '패배' && trade.tradeResult === '패배') ||
+                    (resultFilter === 'none' && !trade.tradeResult);
 
-            const today = new Date();
-            const tradeDate = new Date(trade.buyTime);
-            const isSameDay =
-                today.getFullYear() === tradeDate.getFullYear() &&
-                today.getMonth() === tradeDate.getMonth() &&
-                today.getDate() === tradeDate.getDate();
+                const today = new Date();
+                const tradeDate = new Date(trade.buyTime);
+                const isSameDay =
+                    today.getFullYear() === tradeDate.getFullYear() &&
+                    today.getMonth() === tradeDate.getMonth() &&
+                    today.getDate() === tradeDate.getDate();
 
-            return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
-        })
-        .sort((a, b) =>
-            sortOrder === 'asc'
-                ? new Date(a.buyTime) - new Date(b.buyTime)  // 정순 정렬
-                : new Date(b.buyTime) - new Date(a.buyTime)  // 역순 정렬
-        );
+                return matchesSearch && matchesResult && (searchQuery.trim() !== '' || isSameDay);
+            })
+            .sort((a, b) =>
+                sortOrder === 'asc'
+                    ? new Date(a.buyTime) - new Date(b.buyTime)
+                    : new Date(b.buyTime) - new Date(a.buyTime)
+            );
+    };
 
     return (
         <div>
@@ -377,23 +375,24 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                 onChange={handleSearchChange}
             />
 
-            {selectedTradeIds.map((tradeId) => (
-                <VirtualTradeCard
-                    key={tradeId}
-                    trade={virtualTrades.find((trade) => trade.tradeId === tradeId)}
-                    selectedFields={selectedFields}
-                    onClick={() => onTradeSelect(selectedTradeIds.filter(id => id !== tradeId))}
-                    isSelected={true}
-                    sx={{
-                        position: 'sticky',
-                        top: 0, // 화면 상단에 고정
-                        zIndex: 10,
-                    }}
-                />
-            ))}
+            {selectedTradeIds.map((tradeId) => {
+                const selectedTrade = selectedTradesCache[tradeId];
+                if (!selectedTrade) return null;
 
-            {filteredTrades.length > 0 ? (
-                filteredTrades
+                return (
+                    <VirtualTradeCard
+                        key={tradeId}
+                        trade={selectedTrade}
+                        selectedFields={selectedFields}
+                        onClick={() => onTradeSelect(selectedTradeIds.filter(id => id !== tradeId))}
+                        isSelected={true}
+                    />
+                );
+            })}
+
+            {/* 필터링된 거래 목록 (선택된 것들 제외) */}
+            {!isLoading && getFilteredTrades().length > 0 ? (
+                getFilteredTrades()
                     .filter(trade => !selectedTradeIds.includes(trade.tradeId))
                     .map((trade) => (
                         <VirtualTradeCard
@@ -405,7 +404,9 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
                         />
                     ))
             ) : (
-                <Typography>해당 종목이 없습니다.</Typography>
+                <Typography>
+                    {isLoading ? "검색 중..." : "해당 종목이 없습니다."}
+                </Typography>
             )}
         </div>
     );
