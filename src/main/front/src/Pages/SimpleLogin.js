@@ -24,9 +24,9 @@ const SimpleLogin = () => {
                 } else {
                     // 그 외에는 유효기간 20시간 설정
                     const expiryTime = Date.now() + 20 * 60 * 60 * 1000; // 20시간 후의 타임스탬프
-                    localStorage.setItem('A', token);
-                    localStorage.setItem('B', CURRENT_VERSION);
-                    localStorage.setItem('C', expiryTime);
+                    localStorage.setItem('authToken', token);
+                    localStorage.setItem('authVersion', CURRENT_VERSION);
+                    localStorage.setItem('authTokenExpiry', expiryTime);
                 }
 
                 setMessage('로그인 성공!');
