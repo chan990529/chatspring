@@ -54,9 +54,7 @@ function App() {
         checkTokenVersion();
     }, []);
 
-    useEffect(() => {
-        checkTokenVersion();
-    }, []);
+
     return (
         <Router>
             {/* TradeNotification을 Layout 위에 두어 모든 페이지에서 알림을 받을 수 있도록 설정 */}
