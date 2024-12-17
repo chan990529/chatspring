@@ -38,7 +38,7 @@ const SimpleLogin = () => {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h2>로그인</h2>
+            <h2>!나는</h2>
             <input
                 type="password"
                 value={loginCode}
