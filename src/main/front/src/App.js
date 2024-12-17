@@ -1,5 +1,5 @@
 // src/App.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Layout from './Component/Layout'; // Layout을 import
 import ScalpingPage from './Pages/Scalping';
