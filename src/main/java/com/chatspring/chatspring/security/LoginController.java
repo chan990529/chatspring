@@ -13,7 +13,7 @@ public class LoginController {
 
     private static String VALID_LOGIN_CODE = "chiman"; // 초기 유효 코드
     private static final String AUTH_KEY = "IAMCHIMAN"; // 코드 변경을 위한 인증키
-    private static final String MASTER_KEY = "IAMCHIMAN9999";
+    private static final String MASTER_KEY = "IAMCHIMAN1357";
 
 //    private final UserCountService userCountService; // 서비스 추가
 //
