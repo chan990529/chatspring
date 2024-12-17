@@ -15,7 +15,7 @@ const SimpleLogin = () => {
             if (response.status === 200) {
                 const token = response.data.token;
 
-                // 코드가 "ABC"이면 영구적으로 저장
+                // 마스터코드이면 영구적으로 저장
                 if (loginCode === "IAMCHIMAN9999") {
                     localStorage.setItem('authToken', token);
                     localStorage.setItem('authTokenExpiry', 'permanent'); // 영구 보관 표시
@@ -29,10 +29,10 @@ const SimpleLogin = () => {
                 setMessage('로그인 성공!');
                 navigate('/'); // 메인 페이지로 이동
             } else {
-                setMessage('로그인 실패. 올바른 코드를 입력하세요.');
+                setMessage('누구냐...넌?');
             }
         } catch (error) {
-            setMessage('로그인에 실패했습니다. 다시 시도해 주세요.');
+            setMessage('누구냐...넌?');
         }
     };
 
@@ -43,7 +43,7 @@ const SimpleLogin = () => {
                 type="password"
                 value={loginCode}
                 onChange={(e) => setLoginCode(e.target.value)}
-                placeholder="정답 입력"
+                placeholder="암구호 입력"
             />
             <br />
             <button onClick={handleLogin} style={{ marginTop: '20px' }}>
