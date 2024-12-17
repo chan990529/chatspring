@@ -18,7 +18,7 @@ const SimpleLogin = () => {
                 const token = response.data.token;
 
                 // 마스터코드이면 영구적으로 저장
-                if (loginCode === "IAMCHIMAN9999") {
+                if (loginCode === "IAMCHIMAN1357") {
                     localStorage.setItem('authToken', token);
                     localStorage.setItem('authTokenExpiry', 'permanent'); // 영구 보관 표시
                 } else {
