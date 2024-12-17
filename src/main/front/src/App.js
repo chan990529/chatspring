@@ -17,14 +17,13 @@ function ProtectedRoute({ element }) {
     const expiry = localStorage.getItem('authTokenExpiry');
 
     const isTokenValid = () => {
-        // 토큰이 없으면 무효
-        if (!token) return false;
+        if (!token) return false; // 토큰이 없으면 무효
 
-        // 만료 시간이 "permanent"이면 유효
-        if (expiry === "permanent") return true;
+        if (expiry === "permanent") return true; // 영구 토큰 처리
 
-        // 만료 시간이 지났는지 확인
-        return Date.now() <= Number(expiry);
+        if (!expiry || isNaN(Number(expiry))) return false; // 만료 시간이 비정상적이면 무효
+
+        return Date.now() <= Number(expiry); // 정상적인 만료 시간 검증
     };
 
     // 토큰이 무효하면 로그아웃 처리 및 리다이렉트
@@ -40,13 +39,11 @@ function ProtectedRoute({ element }) {
 function App() {
     const checkTokenVersion = () => {
         const savedVersion = localStorage.getItem('authTokenVersion');
-        const token = localStorage.getItem('authToken');
 
-        // 1. 버전이 없거나
-        // 2. 버전이 서버 버전과 다르면 토큰 무효화
-        if (!savedVersion || Number(savedVersion) !== CURRENT_VERSION) {
+        if (!savedVersion || savedVersion !== CURRENT_VERSION) {
             localStorage.removeItem('authToken');
             localStorage.removeItem('authTokenVersion');
+            window.location.href = '/login'; // 로그인 페이지로 이동
         }
     };
 
