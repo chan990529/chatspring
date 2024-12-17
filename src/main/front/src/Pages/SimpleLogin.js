@@ -12,7 +12,7 @@ const SimpleLogin = () => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('https://scalping.app/api/login', { code: loginCode, version : CURRENT_VERSION});
+            const response = await axios.post('https://scalping.app/api/login', { code: loginCode });
 
             if (response.status === 200) {
                 const token = response.data.token;
@@ -24,8 +24,9 @@ const SimpleLogin = () => {
                 } else {
                     // 그 외에는 유효기간 20시간 설정
                     const expiryTime = Date.now() + 20 * 60 * 60 * 1000; // 20시간 후의 타임스탬프
-                    localStorage.setItem('authToken', token);
-                    localStorage.setItem('authTokenExpiry', expiryTime);
+                    localStorage.setItem('A', token);
+                    localStorage.setItem('B', CURRENT_VERSION);
+                    localStorage.setItem('C', expiryTime);
                 }
 
                 setMessage('로그인 성공!');

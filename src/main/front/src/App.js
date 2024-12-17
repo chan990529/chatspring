@@ -9,6 +9,8 @@ import StatusPage from "./Pages/Status";
 import ReviewPage from './Pages/Review';
 import SimpleLogin from './Pages/SimpleLogin'; // 로그인 페이지 import
 
+const CURRENT_VERSION = 'abc';
+
 // ProtectedRoute 수정: 인증 및 만료 시간 검증
 function ProtectedRoute({ element }) {
     const token = localStorage.getItem('authToken');
@@ -36,6 +38,25 @@ function ProtectedRoute({ element }) {
 }
 
 function App() {
+    const checkTokenVersion = () => {
+        const savedVersion = localStorage.getItem('authTokenVersion');
+        const token = localStorage.getItem('authToken');
+
+        // 1. 버전이 없거나
+        // 2. 버전이 서버 버전과 다르면 토큰 무효화
+        if (!savedVersion || Number(savedVersion) !== CURRENT_VERSION) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('authTokenVersion');
+        }
+    };
+
+    useEffect(() => {
+        checkTokenVersion();
+    }, []);
+
+    useEffect(() => {
+        checkTokenVersion();
+    }, []);
     return (
         <Router>
             {/* TradeNotification을 Layout 위에 두어 모든 페이지에서 알림을 받을 수 있도록 설정 */}
