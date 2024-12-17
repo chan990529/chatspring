@@ -11,10 +11,23 @@ const SimpleLogin = () => {
     const handleLogin = async () => {
         try {
             const response = await axios.post('https://scalping.app/api/login', { code: loginCode });
+
             if (response.status === 200) {
-                localStorage.setItem('authToken', response.data.token); // 인증 토큰 저장
+                const token = response.data.token;
+
+                // 코드가 "ABC"이면 영구적으로 저장
+                if (loginCode === "IAMCHIMAN9999") {
+                    localStorage.setItem('authToken', token);
+                    localStorage.setItem('authTokenExpiry', 'permanent'); // 영구 보관 표시
+                } else {
+                    // 그 외에는 유효기간 20시간 설정
+                    const expiryTime = Date.now() + 20 * 60 * 60 * 1000; // 20시간 후의 타임스탬프
+                    localStorage.setItem('authToken', token);
+                    localStorage.setItem('authTokenExpiry', expiryTime);
+                }
+
                 setMessage('로그인 성공!');
-                navigate('/'); // 로그인 성공 시 메인 페이지로 이동
+                navigate('/'); // 메인 페이지로 이동
             } else {
                 setMessage('로그인 실패. 올바른 코드를 입력하세요.');
             }
@@ -25,7 +38,7 @@ const SimpleLogin = () => {
 
     return (
         <div style={{ textAlign: 'center', marginTop: '50px' }}>
-            <h2>!나는</h2>
+            <h2>로그인</h2>
             <input
                 type="password"
                 value={loginCode}

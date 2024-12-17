@@ -1,6 +1,6 @@
 // src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate  } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Layout from './Component/Layout'; // Layout을 import
 import ScalpingPage from './Pages/Scalping';
 import StatisticsPage from './Pages/Statistics';
@@ -9,11 +9,31 @@ import StatusPage from "./Pages/Status";
 import ReviewPage from './Pages/Review';
 import SimpleLogin from './Pages/SimpleLogin'; // 로그인 페이지 import
 
+// ProtectedRoute 수정: 인증 및 만료 시간 검증
 function ProtectedRoute({ element }) {
-    const isAuthenticated = !!localStorage.getItem('authToken');
-    return isAuthenticated ? element : <Navigate to="/login" />;
-}
+    const token = localStorage.getItem('authToken');
+    const expiry = localStorage.getItem('authTokenExpiry');
 
+    const isTokenValid = () => {
+        // 토큰이 없으면 무효
+        if (!token) return false;
+
+        // 만료 시간이 "permanent"이면 유효
+        if (expiry === "permanent") return true;
+
+        // 만료 시간이 지났는지 확인
+        return Date.now() <= Number(expiry);
+    };
+
+    // 토큰이 무효하면 로그아웃 처리 및 리다이렉트
+    if (!isTokenValid()) {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authTokenExpiry');
+        return <Navigate to="/login" replace />;
+    }
+
+    return element;
+}
 
 function App() {
     return (
