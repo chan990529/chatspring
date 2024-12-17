@@ -15,7 +15,21 @@ const CURRENT_VERSION = 'abc';
 function ProtectedRoute({ element }) {
     const token = localStorage.getItem('authToken');
     const expiry = localStorage.getItem('authTokenExpiry');
+    const savedVersion = localStorage.getItem('authTokenVersion');
 
+    // 버전 검증 및 토큰 무효화
+    const checkTokenVersion = () => {
+        if (!savedVersion || savedVersion !== CURRENT_VERSION) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('authTokenVersion');
+            localStorage.removeItem('authTokenExpiry');
+        }
+    };
+
+    // 버전 검증 실행
+    checkTokenVersion();
+
+    // 토큰 만료 검증
     const isTokenValid = () => {
         if (!token) return false; // 토큰이 없으면 무효
 
@@ -37,18 +51,7 @@ function ProtectedRoute({ element }) {
 }
 
 function App() {
-    const checkTokenVersion = () => {
-        const savedVersion = localStorage.getItem('authTokenVersion');
 
-        if (!savedVersion || savedVersion !== CURRENT_VERSION) {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('authTokenVersion');
-        }
-    };
-
-    useEffect(() => {
-        checkTokenVersion();
-    }, []);
 
 
     return (
