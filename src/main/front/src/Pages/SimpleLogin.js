@@ -21,6 +21,7 @@ const SimpleLogin = () => {
                 if (loginCode === "IAMCHIMAN1357") {
                     localStorage.setItem('authToken', token);
                     localStorage.setItem('authTokenExpiry', 'permanent'); // 영구 보관 표시
+                    localStorage.setItem('authVersion', CURRENT_VERSION);
                 } else {
                     // 그 외에는 유효기간 20시간 설정
                     const expiryTime = Date.now() + 20 * 60 * 60 * 1000; // 20시간 후의 타임스탬프
