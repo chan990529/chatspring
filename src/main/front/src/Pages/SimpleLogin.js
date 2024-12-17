@@ -8,9 +8,11 @@ const SimpleLogin = () => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
+    const CURRENT_VERSION = 'abc';
+
     const handleLogin = async () => {
         try {
-            const response = await axios.post('https://scalping.app/api/login', { code: loginCode });
+            const response = await axios.post('https://scalping.app/api/login', { code: loginCode, version : CURRENT_VERSION});
 
             if (response.status === 200) {
                 const token = response.data.token;

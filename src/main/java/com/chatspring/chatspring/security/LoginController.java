@@ -15,6 +15,8 @@ public class LoginController {
     private static final String AUTH_KEY = "IAMCHIMAN"; // 코드 변경을 위한 인증키
     private static final String MASTER_KEY = "IAMCHIMAN9999";
 
+    String CURRENT_VERSION = "abc"; // 서버 버전
+
 //    private final UserCountService userCountService; // 서비스 추가
 //
 //    public LoginController(UserCountService userCountService) {
@@ -25,8 +27,8 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
         String code = request.get("code");
-
-        if (VALID_LOGIN_CODE.equals(code) || MASTER_KEY.equals(code)) {
+        String version = request.get("version");
+        if ((VALID_LOGIN_CODE.equals(code) || MASTER_KEY.equals(code)) & CURRENT_VERSION.equals(version)) {
 //            userCountService.incrementUserCount();
             return ResponseEntity.ok("로그인 성공");
         } else {
