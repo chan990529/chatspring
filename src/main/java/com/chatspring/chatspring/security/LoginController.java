@@ -27,7 +27,7 @@ public class LoginController {
         String code = request.get("code");
 
         if (VALID_LOGIN_CODE.equals(code) || MASTER_KEY.equals(code)) {
-            userCountService.incrementUserCount();
+//            userCountService.incrementUserCount();
             return ResponseEntity.ok("로그인 성공");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
