@@ -43,7 +43,6 @@ function App() {
         if (!savedVersion || savedVersion !== CURRENT_VERSION) {
             localStorage.removeItem('authToken');
             localStorage.removeItem('authTokenVersion');
-            window.location.href = '/login'; // 로그인 페이지로 이동
         }
     };
 
