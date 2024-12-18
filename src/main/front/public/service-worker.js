@@ -74,29 +74,30 @@ self.addEventListener('push', (event) => {
     if (event.data) {
         try {
             const data = event.data.json();
+
             console.log('푸시 데이터:', data);
 
-            event.waitUntil(
-                // IndexedDB에서 선택된 종목 정보를 읽어옴
-                idb.openDB('trades-db', 1).then(db => {
-                    return db.get('selectedTrades', 'trades');
-                }).then(selectedTrades => {
-                    const selectedStockNames = (selectedTrades || []).map(trade => trade.stockName);
+            // 알림 데이터 유효성 검사
+            const title = data.title || '새 알림';
+            const body = data.body || '내용이 없습니다.';
+            const icon = data.icon || '/default-icon.png';
+            const notificationData = data.data || {};
 
-                    if (selectedStockNames.includes(data.stockName)) {
-                        return self.registration.showNotification(data.title, {
-                            body: data.body,
-                            icon: data.icon,
-                            data: data.data,
-                            tag: Date.now().toString(),
-                            renotify: true
-                        });
-                    }
+            // 알림 표시 작업을 waitUntil로 감싸기
+            event.waitUntil(
+                self.registration.showNotification(title, {
+                    body: body,
+                    icon: icon,
+                    data: notificationData,
+                    tag : Date.now().toString(),
+                    renotify: true  // 새 알림이 올 때마다 알림 소리/진동 발생
                 })
             );
         } catch (error) {
             console.error('푸시 메시지 처리 중 오류:', error);
         }
+    } else {
+        console.warn('푸시 이벤트에 데이터가 없습니다.');
     }
 });
 

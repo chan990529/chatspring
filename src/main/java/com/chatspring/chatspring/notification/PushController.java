@@ -24,6 +24,12 @@ public class PushController {
 
     @PostMapping("/save-subscription")
     public String saveSubscription(@RequestBody PushSubscription subscription) {
+        // 중복 확인
+        if (pushSubscriptionRepository.existsByEndpoint(subscription.getEndpoint())) {
+            return "이미 구독 정보가 존재합니다.";
+        }
+
+        // 중복이 없으면 저장
         pushSubscriptionRepository.save(subscription);
         System.out.println("구독 정보 저장 완료: " + subscription);
         return "구독 정보 저장 성공";

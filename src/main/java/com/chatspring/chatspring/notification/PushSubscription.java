@@ -9,6 +9,7 @@ public class PushSubscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false) // 고유 제약 조건 추가
     private String endpoint;
 
     @Embedded
