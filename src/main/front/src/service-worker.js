@@ -89,6 +89,7 @@ self.addEventListener('push', (event) => {
                     body: body,
                     icon: icon,
                     data: notificationData,
+                    renotify: true  // 새 알림이 올 때마다 알림 소리/진동 발생
                 })
             );
         } catch (error) {
