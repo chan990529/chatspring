@@ -24,7 +24,7 @@ public class PushController {
 
     @PostMapping("/save-subscription")
     public String saveSubscription(@RequestBody PushSubscription subscription) {
-        subscriptions.put(subscription.getEndpoint(), subscription);
+        pushSubscriptionRepository.save(subscription);
         System.out.println("구독 정보 저장 완료: " + subscription);
         return "구독 정보 저장 성공";
     }
