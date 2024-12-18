@@ -196,7 +196,6 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const [sortOrder, setSortOrder] = useState('desc'); // 정렬 순서: 'asc' 또는 'desc'
     const [resultFilter, setResultFilter] = useState('all'); // 결과 필터링 상태: 'all', '승리', '패배', 'none'
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedTradesCache, setSelectedTradesCache] = useState({});
     const [isAuthorized, setIsAuthorized] = useState(false);
 
 
