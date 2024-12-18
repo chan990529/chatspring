@@ -75,6 +75,8 @@ self.addEventListener('push', (event) => {
         try {
             const data = event.data.json();
 
+            console.log('푸시 데이터:', data);
+
             // 알림 데이터 유효성 검사
             const title = data.title || '새 알림';
             const body = data.body || '내용이 없습니다.';
