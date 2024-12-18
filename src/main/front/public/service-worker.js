@@ -76,27 +76,24 @@ self.addEventListener('push', (event) => {
             const data = event.data.json();
             console.log('푸시 데이터:', data);
 
-            // localStorage에서 선택된 종목 정보 가져오기
-            const selectedTrades = JSON.parse(localStorage.getItem('selectedTrades') || '[]');
-            const selectedStockNames = selectedTrades.map(trade => trade.stockName);
+            event.waitUntil(
+                // IndexedDB에서 선택된 종목 정보를 읽어옴
+                idb.openDB('trades-db', 1).then(db => {
+                    return db.get('selectedTrades', 'trades');
+                }).then(selectedTrades => {
+                    const selectedStockNames = (selectedTrades || []).map(trade => trade.stockName);
 
-            // 현재 푸시 알림이 선택된 종목에 대한 것인지 확인
-            if (selectedStockNames.includes(data.stockName)) {
-                const title = data.title || '새 알림';
-                const body = data.body || '내용이 없습니다.';
-                const icon = data.icon || '/default-icon.png';
-                const notificationData = data.data || {};
-
-                event.waitUntil(
-                    self.registration.showNotification(title, {
-                        body: body,
-                        icon: icon,
-                        data: notificationData,
-                        tag: Date.now().toString(),
-                        renotify: true
-                    })
-                );
-            }
+                    if (selectedStockNames.includes(data.stockName)) {
+                        return self.registration.showNotification(data.title, {
+                            body: data.body,
+                            icon: data.icon,
+                            data: data.data,
+                            tag: Date.now().toString(),
+                            renotify: true
+                        });
+                    }
+                })
+            );
         } catch (error) {
             console.error('푸시 메시지 처리 중 오류:', error);
         }
