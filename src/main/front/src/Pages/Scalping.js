@@ -189,7 +189,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
     );
 };
 
-const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats,     selectedTradesCache,  setSelectedTradesCache }) => {
+const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats, selectedTradesCache,  setSelectedTradesCache, onVirtualTradesUpdate }) => {
     const [virtualTrades, setVirtualTrades] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
@@ -198,6 +198,10 @@ const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeS
     const [isLoading, setIsLoading] = useState(false);
     const [isAuthorized, setIsAuthorized] = useState(false);
 
+
+    useEffect(() => {
+        onVirtualTradesUpdate(virtualTrades); // virtualTrades가 업데이트될 때마다 부모 컴포넌트에 알림
+    }, [virtualTrades, onVirtualTradesUpdate]);
 
     useEffect(() => {
         fetchTodayTrades();
@@ -428,7 +432,7 @@ const MonitoringAndTrades = () => {
             '3% 매매내역': true
         };
     });
-
+    const [virtualTrades, setVirtualTrades] = useState([]); // 추가
     const [selectedTradesCache, setSelectedTradesCache] = useState({}); // 추가
 
     const [selectedTradeIds, setSelectedTradeIds] = useState(() => {
@@ -453,18 +457,23 @@ const MonitoringAndTrades = () => {
     const handleTradeSelect = (newSelectedIds) => {
         setSelectedTradeIds(newSelectedIds);
 
-        // selectedTradesCache에서 선택된 거래 정보 가져오기
+        // virtualTrades에서 선택된 거래 정보 가져오기
         const selectedTrades = newSelectedIds.map(id => {
-            const trade = selectedTradesCache[id];
+            const trade = virtualTrades.find(t => t.tradeId === id);
+            if (!trade) return null; // 예외 처리 추가
             return {
                 tradeId: id,
                 stockName: trade.stockName
             };
-        });
+        }).filter(trade => trade !== null); // null인 항목 제거
 
         // 두 정보 모두 저장
         localStorage.setItem('selectedTradeIds', JSON.stringify(newSelectedIds));
         localStorage.setItem('selectedTrades', JSON.stringify(selectedTrades));
+    };
+
+    const handleVirtualTradesUpdate = (trades) => {
+        setVirtualTrades(trades);
     };
 
     const handleCheckboxChange = (event) => {
@@ -589,6 +598,7 @@ const MonitoringAndTrades = () => {
                             setTradeStats={setTradeStats} // 비율 업데이트
                             selectedTradesCache={selectedTradesCache}        // 추가
                             setSelectedTradesCache={setSelectedTradesCache}  // 추가
+                            onVirtualTradesUpdate={handleVirtualTradesUpdate}
                         />
                     </Grid>
                 </Grid>
