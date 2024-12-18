@@ -69,4 +69,19 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// === 푸시 알림 처리 추가 ===
+self.addEventListener('push', (event) => {
+    if (event.data) {
+        const data = event.data.json();
+
+        self.registration.showNotification(data.title, {
+            body: data.body,
+            icon: data.icon || '/default-icon.png', // 기본 아이콘 설정
+            tag: data.tag || 'default-tag', // 알림 그룹 설정
+            data: data.data || {}, // 추가 데이터 (URL 등)
+        });
+    }
+});
+
+
 // Any other custom service worker logic can go here.
