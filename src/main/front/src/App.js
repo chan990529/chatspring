@@ -12,7 +12,7 @@ import SimpleLogin from './Pages/SimpleLogin'; // 로그인 페이지 import
 
 // ProtectedRoute 수정: 인증 및 만료 시간 검증
 function ProtectedRoute({ element }) {
-    const SERVER_VERSION = 'abc';
+    const SERVER_VERSION = 'fdh';
     const token = localStorage.getItem('authToken');
     const expiry = localStorage.getItem('authTokenExpiry');
     const version = localStorage.getItem('authVersion')

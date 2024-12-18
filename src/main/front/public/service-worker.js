@@ -81,7 +81,6 @@ self.addEventListener('push', (event) => {
             const title = data.title || '새 알림';
             const body = data.body || '내용이 없습니다.';
             const icon = data.icon || '/default-icon.png';
-            const tag = data.tag || 'default-tag';
             const notificationData = data.data || {};
 
             // 알림 표시 작업을 waitUntil로 감싸기
@@ -89,7 +88,6 @@ self.addEventListener('push', (event) => {
                 self.registration.showNotification(title, {
                     body: body,
                     icon: icon,
-                    tag: tag,
                     data: notificationData,
                 })
             );
