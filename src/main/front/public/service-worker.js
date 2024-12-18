@@ -82,13 +82,15 @@ self.addEventListener('push', (event) => {
             const tag = data.tag || 'default-tag';
             const notificationData = data.data || {};
 
-            // 알림 표시
-            self.registration.showNotification(title, {
-                body: body,
-                icon: icon,
-                tag: tag,
-                data: notificationData,
-            });
+            // 알림 표시 작업을 waitUntil로 감싸기
+            event.waitUntil(
+                self.registration.showNotification(title, {
+                    body: body,
+                    icon: icon,
+                    tag: tag,
+                    data: notificationData,
+                })
+            );
         } catch (error) {
             console.error('푸시 메시지 처리 중 오류:', error);
         }

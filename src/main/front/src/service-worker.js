@@ -26,47 +26,78 @@ precacheAndRoute(self.__WB_MANIFEST);
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 registerRoute(
-  // Return false to exempt requests from being fulfilled by index.html.
-  ({ request, url }) => {
-    // If this isn't a navigation, skip.
-    if (request.mode !== 'navigate') {
-      return false;
-    } // If this is a URL that starts with /_, skip.
+    // Return false to exempt requests from being fulfilled by index.html.
+    ({ request, url }) => {
+        // If this isn't a navigation, skip.
+        if (request.mode !== 'navigate') {
+            return false;
+        } // If this is a URL that starts with /_, skip.
 
-    if (url.pathname.startsWith('/_')) {
-      return false;
-    } // If this looks like a URL for a resource, because it contains // a file extension, skip.
+        if (url.pathname.startsWith('/_')) {
+            return false;
+        } // If this looks like a URL for a resource, because it contains // a file extension, skip.
 
-    if (url.pathname.match(fileExtensionRegexp)) {
-      return false;
-    } // Return true to signal that we want to use the handler.
+        if (url.pathname.match(fileExtensionRegexp)) {
+            return false;
+        } // Return true to signal that we want to use the handler.
 
-    return true;
-  },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
+        return true;
+    },
+    createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
 registerRoute(
-  // Add in any other file extensions or routing criteria as needed.
-  ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
-  new StaleWhileRevalidate({
-    cacheName: 'images',
-    plugins: [
-      // Ensure that once this runtime cache reaches a maximum size the
-      // least-recently used images are removed.
-      new ExpirationPlugin({ maxEntries: 50 }),
-    ],
-  })
+    // Add in any other file extensions or routing criteria as needed.
+    ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+    new StaleWhileRevalidate({
+        cacheName: 'images',
+        plugins: [
+            // Ensure that once this runtime cache reaches a maximum size the
+            // least-recently used images are removed.
+            new ExpirationPlugin({ maxEntries: 50 }),
+        ],
+    })
 );
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
+
+// === 푸시 알림 처리 추가 ===
+self.addEventListener('push', (event) => {
+    if (event.data) {
+        try {
+            const data = event.data.json();
+
+            // 알림 데이터 유효성 검사
+            const title = data.title || '새 알림';
+            const body = data.body || '내용이 없습니다.';
+            const icon = data.icon || '/default-icon.png';
+            const tag = data.tag || 'default-tag';
+            const notificationData = data.data || {};
+
+            // 알림 표시 작업을 waitUntil로 감싸기
+            event.waitUntil(
+                self.registration.showNotification(title, {
+                    body: body,
+                    icon: icon,
+                    tag: tag,
+                    data: notificationData,
+                })
+            );
+        } catch (error) {
+            console.error('푸시 메시지 처리 중 오류:', error);
+        }
+    } else {
+        console.warn('푸시 이벤트에 데이터가 없습니다.');
+    }
+});
+
 
 // Any other custom service worker logic can go here.
