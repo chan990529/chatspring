@@ -8,7 +8,7 @@ const SimpleLogin = () => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
-    const CURRENT_VERSION = 'abc';
+    const CURRENT_VERSION = 'fdh';
 
     const handleLogin = async () => {
         try {

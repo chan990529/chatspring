@@ -59,6 +59,7 @@ public class PushController {
                 "\"title\": \"" + (message.getType().equals("매도") ? "매도 완료" : "손절 발생") + "\", " +
                 "\"body\": \"" + message.getMessage() + "\", " +
                 "\"icon\": \"" + (message.getType().equals("매도") ? "/open-icon.png" : "/empty-icon.png") + "\", " +
+                "\"stockName\": \"" + message.getStockName() + "\", " +  // 종목명 추가
                 "\"data\": { \"url\": \"/trade-details\" } " +
                 "}";
     }

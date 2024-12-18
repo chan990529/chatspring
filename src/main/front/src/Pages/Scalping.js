@@ -430,7 +430,12 @@ const MonitoringAndTrades = () => {
         };
     });
 
-    const [selectedTradeIds, setSelectedTradeIds] = useState([]);
+    const [selectedTradeIds, setSelectedTradeIds] = useState(() => {
+        const savedSelectedTrades = localStorage.getItem('selectedTradeIds');
+        return savedSelectedTrades ? JSON.parse(savedSelectedTrades) : [];
+    });
+
+
     const [openConfig, setOpenConfig] = useState(false);
 
     const refreshTrades = () => {
@@ -440,6 +445,25 @@ const MonitoringAndTrades = () => {
 
     const handleClearSelection = () => {
         setSelectedTradeIds([]);
+        localStorage.removeItem('selectedTradeIds');
+        localStorage.removeItem('selectedTrades');  // selectedTrades도 함께 제거
+    };
+
+    const handleTradeSelect = (newSelectedIds) => {
+        setSelectedTradeIds(newSelectedIds);
+
+        // selectedTradesCache에서 선택된 거래 정보 가져오기
+        const selectedTrades = newSelectedIds.map(id => {
+            const trade = selectedTradesCache[id];
+            return {
+                tradeId: id,
+                stockName: trade.stockName
+            };
+        });
+
+        // 두 정보 모두 저장
+        localStorage.setItem('selectedTradeIds', JSON.stringify(newSelectedIds));
+        localStorage.setItem('selectedTrades', JSON.stringify(selectedTrades));
     };
 
     const handleCheckboxChange = (event) => {
@@ -559,7 +583,7 @@ const MonitoringAndTrades = () => {
                             refreshKey={refreshKey}
                             selectedFields={selectedFields}
                             onConfigClick={handleOpenConfig}
-                            onTradeSelect={setSelectedTradeIds}
+                            onTradeSelect={handleTradeSelect} // 수정
                             selectedTradeIds={selectedTradeIds}
                             setTradeStats={setTradeStats} // 비율 업데이트
                         />
