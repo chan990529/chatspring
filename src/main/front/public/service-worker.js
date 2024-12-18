@@ -72,14 +72,28 @@ self.addEventListener('message', (event) => {
 // === 푸시 알림 처리 추가 ===
 self.addEventListener('push', (event) => {
     if (event.data) {
-        const data = event.data.json();
+        try {
+            const data = event.data.json();
 
-        self.registration.showNotification(data.title, {
-            body: data.body,
-            icon: data.icon || '/default-icon.png', // 기본 아이콘 설정
-            tag: data.tag || 'default-tag', // 알림 그룹 설정
-            data: data.data || {}, // 추가 데이터 (URL 등)
-        });
+            // 알림 데이터 유효성 검사
+            const title = data.title || '새 알림';
+            const body = data.body || '내용이 없습니다.';
+            const icon = data.icon || '/default-icon.png';
+            const tag = data.tag || 'default-tag';
+            const notificationData = data.data || {};
+
+            // 알림 표시
+            self.registration.showNotification(title, {
+                body: body,
+                icon: icon,
+                tag: tag,
+                data: notificationData,
+            });
+        } catch (error) {
+            console.error('푸시 메시지 처리 중 오류:', error);
+        }
+    } else {
+        console.warn('푸시 이벤트에 데이터가 없습니다.');
     }
 });
 
