@@ -189,7 +189,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
     );
 };
 
-const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats }) => {
+const VirtualTradeTable = ({ refreshKey, selectedFields, onConfigClick, onTradeSelect, selectedTradeIds, setTradeStats,     selectedTradesCache,  setSelectedTradesCache }) => {
     const [virtualTrades, setVirtualTrades] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearching, setIsSearching] = useState(false);
@@ -430,6 +430,8 @@ const MonitoringAndTrades = () => {
         };
     });
 
+    const [selectedTradesCache, setSelectedTradesCache] = useState({}); // 추가
+
     const [selectedTradeIds, setSelectedTradeIds] = useState(() => {
         const savedSelectedTrades = localStorage.getItem('selectedTradeIds');
         return savedSelectedTrades ? JSON.parse(savedSelectedTrades) : [];
@@ -586,6 +588,8 @@ const MonitoringAndTrades = () => {
                             onTradeSelect={handleTradeSelect} // 수정
                             selectedTradeIds={selectedTradeIds}
                             setTradeStats={setTradeStats} // 비율 업데이트
+                            selectedTradesCache={selectedTradesCache}        // 추가
+                            setSelectedTradesCache={setSelectedTradesCache}  // 추가
                         />
                     </Grid>
                 </Grid>
