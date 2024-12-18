@@ -47,7 +47,7 @@ if ('serviceWorker' in navigator) {
                         console.log('Push Subscription:', subscription);
 
                         // 구독 정보를 서버에 전송
-                        fetch('/api/push/save-subscription', {
+                        fetch('/api/notifications/save-subscription', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(subscription)
