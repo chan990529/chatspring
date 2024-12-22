@@ -111,13 +111,14 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
             sx={{
                 marginBottom: 2,
                 backgroundColor:
-                    trade.tradeResult === '승리'
-                        ? '#3DFF92'
-                        : trade.tradeResult === '패배'
-                            ? '#FF5675'
-                            : trade.tradeResult === ''
-                                ? '#f8f9fa'
-                                : 'default',
+                    trade.deadZone && !trade.tradeResult
+                        ? '#000' // 데드존이고 결과가 없을 때 배경 검정
+                        : trade.tradeResult === '승리'
+                            ? '#3DFF92'
+                            : trade.tradeResult === '패배'
+                                ? '#FF5675'
+                                : '#f8f9fa',
+                color: trade.deadZone && !trade.tradeResult ? '#fff' : 'inherit',
                 borderRadius: '12px',
                 boxShadow: isSelected ? 'rgba(3, 102, 214, 0.3) 0px 0px 0px 3px' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
                 margin: '10px 0',

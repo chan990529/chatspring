@@ -60,6 +60,16 @@ public class VirtualTrade {
     @Column(name = "market_type")
     private String marketType;
 
+    @Column(name = "dead_zone")
+    private Boolean deadZone;
+
+    @Column(name = "original_stop_loss")
+    private Integer originalStopLoss;
+
+    @Column(name = "original_start_price")
+    private Integer originalStartPrice;
+
+
 //    @Column(name = "code")
 //    private String Code;
 //
@@ -204,5 +214,28 @@ public class VirtualTrade {
         this.marketType = marketType;
     }
 
+    public Integer getOriginalStopLoss() {
+        return originalStopLoss;
+    }
+
+    public void setOriginalStopLoss(Integer originalStopLoss) {
+        this.originalStopLoss = originalStopLoss;
+    }
+
+    public Integer getOriginalStartPrice() {
+        return originalStartPrice;
+    }
+
+    public void setOriginalStartPrice(Integer originalStartPrice) {
+        this.originalStartPrice = originalStartPrice;
+    }
+
+    public Boolean getDeadZone() {
+        return deadZone;
+    }
+
+    public void setDeadZone(Boolean deadZone) {
+        this.deadZone = deadZone;
+    }
 }
 
