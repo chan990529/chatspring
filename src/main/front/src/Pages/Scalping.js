@@ -199,7 +199,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                             width: 70,
                             height: 80,
                             borderRadius: 0,
-                            marginTop: 3, // 이미지를 아래로 내림
+                            marginTop: 4, // 이미지를 아래로 내림
                         }}
                     />
                 </Box>
