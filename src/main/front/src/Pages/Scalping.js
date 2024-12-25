@@ -28,7 +28,7 @@ import EmptyImage from './Empty.png';
 import './Scalping.css';  // CSS 파일을 따로 관리
 import ScrollToTop from './ScrollToTop';
 import RefreshableGrid from "./RefreshableGrid";
-import { Popover } from '@mui/material';
+import { Popover , Tooltip } from '@mui/material';
 
 axios.defaults.baseURL = 'https://scalping.app';
 
@@ -81,6 +81,21 @@ const TitleText = ({ tradeStats }) => {
 };
 
 const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handlePopoverOpen = (event) => {
+        event.stopPropagation(); // 이벤트 전파 차단
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = (event) => {
+        event.stopPropagation(); // 이벤트 전파 차단
+        setAnchorEl(null);
+    };
+
+    const isPopoverOpen = Boolean(anchorEl);
+
+
     let tradeResultImage = CloseImage;
     if (trade.tradeResult === '승리') {
         tradeResultImage = OpenImage;
@@ -111,25 +126,70 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
             sx={{
                 marginBottom: 2,
                 backgroundColor:
-                    trade.deadZone && !trade.tradeResult
-                        ? '#000' // 데드존이고 결과가 없을 때 배경 검정
-                        : trade.tradeResult === '승리'
-                            ? '#3DFF92'
-                            : trade.tradeResult === '패배'
-                                ? '#FF5675'
-                                : '#f8f9fa',
-                color: trade.deadZone && !trade.tradeResult ? '#fff' : 'inherit',
+                    trade.tradeResult === '승리'
+                        ? '#3DFF92'
+                        : trade.tradeResult === '패배'
+                            ? '#FF5675'
+                            : trade.tradeResult === ''
+                                ? '#f8f9fa'
+                                : 'default',
                 borderRadius: '12px',
                 boxShadow: isSelected ? 'rgba(3, 102, 214, 0.3) 0px 0px 0px 3px' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
                 margin: '10px 0',
                 cursor: 'pointer',
-                position: 'relative', // 추가
+                position: 'relative',
             }}
             onClick={onClick}
         >
             <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2, gap: 2}}>
-                    <Typography variant="h6" sx={{ flex: 1 ,fontWeight: 'bold' }}>
+                {/* 우측 상단 테마 표시 */}
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 8,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                    }}
+                >
+                    <>
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            sx={{ fontSize: '0.8rem' }}
+                            onClick={handlePopoverOpen} // 팝오버 열기
+                        >
+                            {trade.theme.length > 10 ? `${trade.theme.slice(0, 10)}...` : trade.theme}
+                        </Button>
+                        <Popover
+                            open={isPopoverOpen}
+                            anchorEl={anchorEl}
+                            onClose={handlePopoverClose} // 팝오버 닫기
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            PaperProps={{
+                                sx: {
+                                    padding: 2,
+                                    maxWidth: 200,
+                                },
+                            }}
+                            onClick={(event) => event.stopPropagation()} // 팝오버 클릭 이벤트 전파 차단
+                        >
+                            <Typography>{trade.theme}</Typography>
+                        </Popover>
+                    </>
+                </Box>
+
+                {/* 카드 콘텐츠 */}
+                <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2, gap: 2 }}>
+                    <Typography variant="h6" sx={{ flex: 1, fontWeight: 'bold' }}>
                         <strong>{trade.stockName}</strong>
                     </Typography>
                     <Avatar
@@ -139,6 +199,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                             width: 70,
                             height: 80,
                             borderRadius: 0,
+                            marginTop: 3, // 이미지를 아래로 내림
                         }}
                     />
                 </Box>
@@ -146,12 +207,12 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                     sx={{
                         fontSize: '0.9rem',
                         fontWeight: 'bold',
-                        color: '#000', // 글자색을 검은색으로 설정
-                        border: '2px solid #FFD700', // 노란색 테두리
-                        borderRadius: '4px', // 모서리를 둥글게 처리
-                        padding: '2px 8px', // 내부 여백
-                        display: 'inline-block', // 글씨만큼만 크기를 설정
-                        backgroundColor : '#FFD700',
+                        color: '#000',
+                        border: '2px solid #FFD700',
+                        borderRadius: '4px',
+                        padding: '2px 8px',
+                        display: 'inline-block',
+                        backgroundColor: '#FFD700',
                     }}
                 >
                     {getMarketTypeLabel(trade.marketType)}
@@ -159,13 +220,13 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                 <Typography><strong>평단가:</strong> {formatNumber(trade.buyPrice)}</Typography>
                 <Typography
                     sx={{
-                        color: isBefore920 ? '#7b00ff' : 'inherit' // 9시 20분 이전인 경우 글씨 색 노란색으로 변경
+                        color: isBefore920 ? '#7b00ff' : 'inherit',
                     }}
                 >
                     <strong>매수일:</strong> {buyTimeDate.toLocaleString('ko-KR')}
                 </Typography>
                 <Typography><strong>매수횟수:</strong> {trade.numBuys}</Typography>
-                {/*<Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>*/}
+                <Typography><strong>매매결과:</strong> {trade.tradeResult}</Typography>
                 <Typography><strong>손절가:</strong> {formatNumber(trade.stopLossPrice)}</Typography>
                 <Typography><strong>조건식:</strong> {trade.conditionType}</Typography>
                 <Typography><strong>1% 매도가:</strong> {trade.sellPrice1 ? formatNumber(trade.sellPrice1) : 'N/A'}</Typography>
@@ -182,9 +243,6 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                 {selectedFields['3% 매매내역'] && (
                     <Typography><strong>3% 경과시간:</strong> {trade.reachTime3}</Typography>
                 )}
-
-                {/* 우측 하단 marketType 표시 */}
-
             </CardContent>
         </Card>
     );

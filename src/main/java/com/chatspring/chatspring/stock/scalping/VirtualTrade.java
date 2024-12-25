@@ -69,6 +69,9 @@ public class VirtualTrade {
     @Column(name = "original_start_price")
     private Integer originalStartPrice;
 
+    @Column(name = "theme")
+    private String theme;
+
 
 //    @Column(name = "code")
 //    private String Code;
@@ -236,6 +239,14 @@ public class VirtualTrade {
 
     public void setDeadZone(Boolean deadZone) {
         this.deadZone = deadZone;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 }
 
