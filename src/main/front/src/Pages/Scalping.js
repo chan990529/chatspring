@@ -160,8 +160,8 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                             sx={{ fontSize: '0.8rem' }}
                             onClick={handlePopoverOpen} // 팝오버 열기
                         >
-                            {trade.theme.length > 10 ? `${trade.theme.slice(0, 10)}...` : trade.theme}
-                        </Button>
+                            {trade.theme && trade.theme.length > 10 ? `${trade.theme.slice(0, 10)}...` : (trade.theme || '테마없음')}
+                    </Button>
                         <Popover
                             open={isPopoverOpen}
                             anchorEl={anchorEl}
