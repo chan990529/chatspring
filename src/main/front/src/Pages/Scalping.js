@@ -126,13 +126,16 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
             sx={{
                 marginBottom: 2,
                 backgroundColor:
-                    trade.tradeResult === '승리'
-                        ? '#3DFF92'
-                        : trade.tradeResult === '패배'
-                            ? '#FF5675'
-                            : trade.tradeResult === ''
-                                ? '#f8f9fa'
-                                : 'default',
+                    trade.finalProfit < 2.5 && trade.sellPrice1 === null
+                        ? '#000000' // Background color when finalProfit is under 2.5
+                        : trade.tradeResult === '승리'
+                            ? '#3DFF92'
+                            : trade.tradeResult === '패배'
+                                ? '#FF5675'
+                                : trade.tradeResult === ''
+                                    ? '#f8f9fa'
+                                    : 'default',
+                color : trade.finalProfit < 2.5 ? '#FFFFFF' : 'inherit',
                 borderRadius: '12px',
                 boxShadow: isSelected ? 'rgba(3, 102, 214, 0.3) 0px 0px 0px 3px' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
                 margin: '10px 0',

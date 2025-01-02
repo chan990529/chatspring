@@ -69,8 +69,13 @@ public class VirtualTrade {
     @Column(name = "original_start_price")
     private Integer originalStartPrice;
 
+    @Column(name = "final_profit")
+    private Float finalProfit;
+
     @Column(name = "theme")
     private String theme;
+
+
 
 
 //    @Column(name = "code")
@@ -233,13 +238,6 @@ public class VirtualTrade {
         this.originalStartPrice = originalStartPrice;
     }
 
-    public Boolean getDeadZone() {
-        return deadZone;
-    }
-
-    public void setDeadZone(Boolean deadZone) {
-        this.deadZone = deadZone;
-    }
 
     public String getTheme() {
         return theme;
@@ -247,6 +245,14 @@ public class VirtualTrade {
 
     public void setTheme(String theme) {
         this.theme = theme;
+    }
+
+    public Float getFinalProfit() {
+        return finalProfit;
+    }
+
+    public void setFinalProfit(Float finalProfit) {
+        this.finalProfit = finalProfit;
     }
 }
 
