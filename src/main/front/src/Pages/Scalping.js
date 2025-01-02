@@ -95,7 +95,6 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
 
     const isPopoverOpen = Boolean(anchorEl);
 
-
     let tradeResultImage = CloseImage;
     if (trade.tradeResult === '승리') {
         tradeResultImage = OpenImage;
@@ -121,12 +120,15 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
         }
     };
 
+    const timeDifferenceInMinutes = (new Date() - buyTimeDate) / (1000 * 60);
+    const shouldHighlight = !trade.tradeResult && timeDifferenceInMinutes > 80;
+
     return (
         <Card
             sx={{
                 marginBottom: 2,
                 backgroundColor:
-                    trade.finalProfit < 2.5 && trade.sellPrice1 === null
+                    trade.finalProfit < -2.5 && (trade.tradeResult === null || trade.tradeResult === '')
                         ? '#000000' // Background color when finalProfit is under 2.5
                         : trade.tradeResult === '승리'
                             ? '#3DFF92'
@@ -135,12 +137,13 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                                 : trade.tradeResult === ''
                                     ? '#f8f9fa'
                                     : 'default',
-                color : trade.finalProfit < 2.5 ? '#FFFFFF' : 'inherit',
+                color : trade.finalProfit < -2.5 && trade.sellPrice1 === null ? '#FFFFFF' : 'inherit',
                 borderRadius: '12px',
                 boxShadow: isSelected ? 'rgba(3, 102, 214, 0.3) 0px 0px 0px 3px' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
                 margin: '10px 0',
                 cursor: 'pointer',
                 position: 'relative',
+                border: shouldHighlight ? '5px solid red' : 'none', // Red outline condition
             }}
             onClick={onClick}
         >
@@ -164,7 +167,7 @@ const VirtualTradeCard = ({ trade, selectedFields, onClick, isSelected }) => {
                             onClick={handlePopoverOpen} // 팝오버 열기
                         >
                             {trade.theme && trade.theme.length > 10 ? `${trade.theme.slice(0, 10)}...` : (trade.theme || '테마없음')}
-                    </Button>
+                        </Button>
                         <Popover
                             open={isPopoverOpen}
                             anchorEl={anchorEl}
